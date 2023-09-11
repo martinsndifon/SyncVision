@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """main website flask app"""
-from flask import Flask
+from flask import Flask, session
 from views import app_views
 from flask_socketio import SocketIO, join_room, leave_room, send
 
@@ -18,19 +18,26 @@ def handle_my_custom_event(data):
 
 @socketio.on('join')
 def on_join(data):
-    username = data['username']
+    # userId = data['username']
+    userId = session['userId']
     room = data['room']
     join_room(room)
-    send(username + ' has entered the room.', to=room)
+    data = {'userId': userId, 'type': 'join'}
+    send(data, to=room)
 
 
 @socketio.on('leave')
 def on_leave(data):
-    username = data['username']
+    userId = data['userId']
     room = data['room']
     leave_room(room)
-    send(username + ' has left the room.', to=room)
+    send(userId + ' has left the room.', to=room)
 
+
+@socketio.on('chat')
+def send_chat_message(data):
+    room = data['to']
+    send(data, to=room)
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
