@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """main website flask app"""
-from flask import Flask, session
+from flask import Flask, session, request
 from views import app_views
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
 
@@ -18,12 +18,12 @@ def handle_my_custom_event(data):
 
 @socketio.on('join')
 def on_join(data):
-    # userId = data['username']
     userId = session['userId']
     room = data['room']
     join_room(room)
     data = {'userId': userId, 'type': 'join'}
     send(data, to=room)
+    emit('ready', {userId: userId}, to=room, skip_sid=request.sid)
 
 
 @socketio.on('leave')
@@ -46,7 +46,7 @@ def transfer_data(message):
     room = message['room']
     data = message['data']
     print('DataEvent: {} has sent the data:\n {}\n'.format(user_id, data))
-    emit('data', data, to=room)
+    emit('data', data, to=room, skip_sid=request.sid)
 
 
 @socketio.on_error_default
