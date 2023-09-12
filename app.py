@@ -2,7 +2,7 @@
 """main website flask app"""
 from flask import Flask, session
 from views import app_views
-from flask_socketio import SocketIO, join_room, leave_room, send
+from flask_socketio import SocketIO, join_room, leave_room, send, emit
 
 
 app = Flask(__name__)
@@ -38,6 +38,22 @@ def on_leave(data):
 def send_chat_message(data):
     room = data['to']
     send(data, to=room)
+
+
+@socketio.on('data')
+def transfer_data(message):
+    user_id = message['userId']
+    room = message['room']
+    data = message['data']
+    print('DataEvent: {} has sent the data:\n {}\n'.format(user_id, data))
+    emit('data', data, to=room)
+
+
+@socketio.on_error_default
+def default_error_handler(e):
+    print("Error: {}".format(e))
+    socketio.stop()
+
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
