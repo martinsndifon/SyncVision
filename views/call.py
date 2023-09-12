@@ -10,7 +10,8 @@ def callHandler():
     """Handles the call route"""
     # session['userId'] = str(uuid4())
     room_id = str(uuid4())
-    return redirect('/call/{}'.format(room_id))
+    return redirect(url_for('app_views.routeRoom', roomId=room_id))
+
 
 @app_views.route('/call/<roomId>', strict_slashes=False)
 def routeRoom(roomId):
