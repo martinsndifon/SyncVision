@@ -23,7 +23,8 @@ def on_join(data):
     join_room(room)
     data = {'userId': userId, 'type': 'join'}
     send(data, to=room)
-    emit('ready', {userId: userId}, to=room, skip_sid=request.sid)
+    emit('ready', {userId: userId}, to=room,
+         skip_sid=request.sid)  # type: ignore
 
 
 @socketio.on('leave')
@@ -31,7 +32,8 @@ def on_leave(data):
     userId = data['userId']
     room = data['room']
     leave_room(room)
-    send(userId + ' has left the room.', to=room)
+    data = {'userId': userId, 'type': 'leave'}
+    send(data, to=room)
 
 
 @socketio.on('chat')
@@ -46,7 +48,7 @@ def transfer_data(message):
     room = message['room']
     data = message['data']
     print('DataEvent: {} has sent the data:\n {}\n'.format(user_id, data))
-    emit('data', data, to=room, skip_sid=request.sid)
+    emit('data', data, to=room, skip_sid=request.sid)  # type: ignore
 
 
 @socketio.on_error_default
