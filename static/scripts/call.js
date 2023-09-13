@@ -76,6 +76,7 @@ const startConnection = () => {
     .then((stream) => {
       console.log('Got the local stream');
       localVideo.srcObject = stream;
+      localVideo.muted = true;
       socket.connect();
       socket.emit('join', { room: roomId });
     })
