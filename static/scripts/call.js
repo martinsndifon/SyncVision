@@ -221,8 +221,10 @@ async function hangup() {
     pc.close();
     pc = null;
   }
-  localStream.getTracks().forEach((track) => track.stop());
-  localStream = null;
+  if (localStream) {
+    localStream.getTracks().forEach((track) => track.stop());
+    localStream = null;
+  }
 }
 
 // creates a peer connection and send and offer to the peer, fires when a new peer joins another peer in a room
