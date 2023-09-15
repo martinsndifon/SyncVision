@@ -41,9 +41,13 @@
                   type="text"
                   name="link"
                   id="link-input"
+                  onfocus="inputFocus()"
+                  onblur="inputBlur()"
                   placeholder="Enter a code or link"
                 />
-                <button type="submit" id="join-btn">Join</button>
+                <button type="submit" id="join-btn" class="inactive">
+                  Join
+                </button>
               </form>
             </div>
             <div class="underline"></div>

@@ -86,26 +86,36 @@ html {
   font-size: 17px;
   color: #000;
 }
-input:active {
-  border: none;
-}
 
 #join-btn {
   padding: 0 15px;
   background-color: #ffffff;
-  border: 2px solid #960aee;
+
   font-size: 18px;
   color: #960aee;
   border-radius: 2px;
   cursor: pointer;
 }
+#join-btn.active {
+  color: #960aee;
+  border: 2px solid #960aee;
+}
+
+#join-btn.inactive {
+  color: #c3c2c2;
+  border: 2px solid #c3c2c2;
+}
+
 .underline {
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid #8f8e8e;
 }
 .aboutUs {
   display: flex;
   gap: 10px;
   font-size: 28px;
+}
+a {
+  color: #960aee;
 }
 .img-container {
   width: 25%;
