@@ -16,14 +16,28 @@ def handle_my_custom_event(data):
     print('received json: ', data)
 
 
+# Track connected users in each room
+room_users = {}
+clients = {}
+
+
 @socketio.on('join')
 def on_join(data):
     userId = session['userId']
     room = data['room']
     join_room(room)
+    if room not in room_users:
+        room_users[room] = []
+    room_users[room].append(userId)
+
+    if room not in clients:
+        clients[room] = {}
+    if userId not in clients[room]:
+        clients[room][userId] = request.sid  # type: ignore
+
     data = {'userId': userId, 'type': 'join'}
     send(data, to=room)
-    emit('ready', {userId: userId}, to=room,
+    emit('ready', userId, to=room,
          skip_sid=request.sid)  # type: ignore
 
 
@@ -31,6 +45,14 @@ def on_join(data):
 def on_leave(data):
     userId = data['userId']
     room = data['room']
+    if room in room_users and userId in room_users[room]:
+        room_users[room].remove(userId)
+    # Delete room if no users are left inside
+    if not room_users[room]:
+        del room_users[room]
+    # Delete the client's request SID
+    if userId in clients[room]:
+        del clients[room][userId]
     leave_room(room)
     data = {'userId': userId, 'type': 'leave'}
     send(data, to=room)
@@ -44,11 +66,18 @@ def send_chat_message(data):
 
 @socketio.on('data')
 def transfer_data(message):
-    user_id = message['userId']
     room = message['room']
+    peer_user_id = message['peerUserId']
+    peer_to_send = clients[room][peer_user_id]
+    if not peer_to_send:
+        print('Peer to send data to not found')
+        return
+    user_id = message['userId']
     data = message['data']
-    print('DataEvent: {} has sent the data:\n {}\n'.format(user_id, data))
-    emit('data', data, to=room, skip_sid=request.sid)  # type: ignore
+    data['userId'] = user_id
+    print('DataEvent: {} is sending the data:\n {}\n to {}'.format(
+        user_id, data, peer_user_id))
+    emit('data', data, to=peer_to_send)
 
 
 @socketio.on_error_default
