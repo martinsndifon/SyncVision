@@ -201,4 +201,12 @@ a {
   .aboutUs {
     font-size: 20px;
   }
+  .back-home {
+    padding: 10px 20px;
+  }
+  .about-container h1 {
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 16px;
+  }
 }
