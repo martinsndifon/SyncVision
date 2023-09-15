@@ -73,6 +73,12 @@ html {
   background-color: #960aee;
   color: #ffffff;
 }
+.newMeet-btn:hover {
+  color: #960aee;
+  background-color: #ffffff;
+  border: 2px solid #960aee;
+  text-decoration: none;
+}
 .cam-icon {
   margin-right: 10px;
 }
@@ -96,6 +102,7 @@ html {
   border-radius: 2px;
   cursor: pointer;
 }
+
 #join-btn.active {
   color: #960aee;
   border: 2px solid #960aee;
@@ -116,6 +123,10 @@ html {
 }
 a {
   color: #960aee;
+}
+a:hover {
+  text-decoration: underline;
+  text-underline-offset: 10px;
 }
 .img-container {
   width: 25%;
