@@ -1,5 +1,7 @@
 import { DateTime } from "./modules/luxon.js";
-import inputElement from "./modules/inputCode.js";
+import toggleButton from "./modules/volumeToogle.js";
+import toggleButtonCam from "./modules/cameraToogle.js";
+
 const dateAndTime = document.querySelector(".date-input");
 
 // To display Time and Date
@@ -10,4 +12,5 @@ setInterval(() => {
   );
 }, 1000);
 
-inputElement();
+toggleButtonCam();
+toggleButton();
