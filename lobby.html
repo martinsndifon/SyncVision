@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./lobby.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -41,30 +42,27 @@
       <section class="video-container">
         <div class="local-container">
           <!-- Local user's video stream -->
-          <video id="localVideo" autoplay muted></video>
+          <video id="localVideo" autoplay playesinline></video>
         </div>
         <div id="controls">
           <!-- Buttons for call control -->
-          <div class="volume-control">
-            <button id="volume" class="control-btn control unmute">
-              <i class="fa fa-microphone"></i>
-            </button>
+          <div class="control-container" id="mic-btn">
+            <img src="./assets/mic.png" alt="mic icon" />
           </div>
-          <div class="camera-control">
-            <button id="camera" class="control-btn control unmute">
-              <i class="fa fa-video-camera"></i>
-            </button>
+          <div class="control-container" id="camera-btn">
+            <img src="./assets/camera.png" alt="camera icon" />
           </div>
         </div>
       </section>
       <section class="user-info">
         <h2>What's your name?</h2>
         <form class="user-name">
-          <input type="text" id="name" placeholder="Your name" required />
-          <button class="name-btn">Ask to join</button>
+          <input type="text" id="userName" placeholder="Your name" required />
+          <button id="name-btn" class="inactive">Ask to join</button>
         </form>
       </section>
     </main>
-    <script type="module" src="./script1.js"></script>
+    <script type="module" src="./script.js"></script>
+    <script type="module" src="./lobby.js"></script>
   </body>
 </html>
