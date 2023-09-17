@@ -80,6 +80,26 @@ def transfer_data(message):
     emit('data', data, to=peer_to_send)
 
 
+@socketio.on('checkId')
+def check_roomId(data):
+    roomId = data['roomId']
+    if roomId not in room_users:
+        data = {'result': False}
+    else:
+        data = {'result': True}
+    emit('status', data, to=request.sid)  # type: ignore
+
+
+@socketio.on('check-capacity')
+def check_max_capacity(data):
+    roomId = data['roomId']
+    if len(room_users[roomId]) == 2:
+        data = {'result': True}
+    else:
+        data = {'result': False}
+    emit('capacity', data, to=request.sid)  # type: ignore
+
+
 @socketio.on_error_default
 def default_error_handler(e):
     print("Error: {}".format(e))

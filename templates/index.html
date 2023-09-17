@@ -4,19 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sync Vision</title>
-    <script src="../static/scripts/index.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+      integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script src="../static/scripts/index.js" defer></script>
   </head>
   <body>
     <p>Welcome to Sync version!</p>
     <br />
-    <button id="new-meeting"></button>
+    <button id="new-meeting">New meeting</button>
     <div>
       <input
         type="text"
         id="meeting-link-box"
         placeholder="Enter Meeting ID or link"
       />
-      <button id="join-meeting"></button>
+      <button id="join-meeting">Join</button>
     </div>
   </body>
 </html>

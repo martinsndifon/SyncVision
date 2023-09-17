@@ -276,6 +276,7 @@ socket.on('data', async (data) => {
 
 // Journey begins here :)
 (async () => {
+  // To be implemented - add a function to check if the room exist and if max capacity has not been reached
   createLocalVideo();
   await startConnection();
 })();
