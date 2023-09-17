@@ -5,6 +5,32 @@ const messageBox = document.getElementById('messagesbox');
 const sendbutton = document.getElementById('send');
 const inputbox = document.getElementById('inputbox');
 const endCall = document.getElementById('endcall');
+const audioToggle = document.getElementById('audiotoggle');
+const videoToggle = document.getElementById('videotoggle');
+
+audioToggle.addEventListener('click', toggleAudio);
+videoToggle.addEventListener('click', toggleVideo);
+
+//function to mute/unmute audio
+function toggleAudio (e) {
+  const audioTracks = localStream.getAudioTracks();
+  const defaultTrack = audioTracks[0];
+  if (defaultTrack.enabled) {
+    defaultTrack.enabled = false;
+  } else {
+    defaultTrack.enabled = true;
+  }
+}
+
+function toggleVideo (e) {
+  const videoTracks = localStream.getVideoTracks();
+  const defaultTrack = videoTracks[0];
+  if (defaultTrack.enabled) {
+    defaultTrack.enabled = false;
+  } else {
+    defaultTrack.enabled = true;
+  }
+}
 
 const socket = io({ autoConnect: false });
 const connectedPeers = {};
@@ -101,6 +127,8 @@ const startConnection = async () => {
     .getUserMedia({ audio: true, video: true })
     .then((stream) => {
       console.log('Got the local stream');
+      // The local Stream should be here, when the user gets a stream from his own devices, not when a peerConnection is created. This gives me the opportunity to work with it regardless of the connection status.
+      localStream = stream;
       localVideo.srcObject = stream;
       localVideo.muted = true;
       socket.connect();
@@ -150,7 +178,7 @@ const createPeerConnection = async (peerUserId) => {
     });
     pc.onicecandidate = (event) => onIceCandidate(event, peerUserId);
     pc.ontrack = (event) => onTrack(event, peerUserId);
-    localStream = localVideo.srcObject;
+    // localStream = localVideo.srcObject;
     for (const track of localStream.getTracks()) {
       pc.addTrack(track, localStream);
     }
