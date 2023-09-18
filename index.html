@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <title>SynVision</title>
+  </head>
+
+  <body>
+    <header class="nav">
+      <a href="./index.html">
+        <img src="./assets/Logo1.png" alt="logo" class="logo" />
+      </a>
+      <div class="date-input">
+        <p class="date"></p>
+        <p class="time"></p>
+      </div>
+    </header>
+    <main class="container">
+      <div class="home-container">
+        <div class="info-container">
+          <div class="info-section">
+            <h1>Welcome to SyncVision. <br />Meeting for everyone.</h1>
+            <h3>
+              Connecting with friends, family, and colleagues is just a click
+              away. Say goodbye to distance and hello to face-to-face
+              conversations. Let's get started and bring your conversations to
+              life!"
+            </h3>
+            <div class="connect-area">
+              <a href="lobby.html" class="newMeet-btn"
+                ><span><i class="fa fa-video-camera cam-icon"></i></span>New
+                meeting</a
+              >
+              <form class="form">
+                <input
+                  type="text"
+                  name="link"
+                  id="link-input"
+                  placeholder="Enter a code or link"
+                />
+                <button type="submit" id="join-btn" class="inactive">
+                  Join
+                </button>
+              </form>
+            </div>
+            <div class="underline"></div>
+            <div class="aboutUs">
+              <p>Learn more about</p>
+              <a href="./aboutUs.html">SyncVision</a>
+            </div>
+          </div>
+        </div>
+        <div class="img-container">
+          <img src="./assets/home-image.png" alt="home-image" />
+          <p>
+            Connect via video and audio, facilitating virtual meetings,
+            conversations, and collaborations from anywhere with SyncVision
+          </p>
+        </div>
+      </div>
+    </main>
+    <script type="module" src="./js/script.js"></script>
+  </body>
+</html>

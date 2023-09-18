@@ -1,0 +1,228 @@
+@import url("https://fonts.googleapis.com/css2?family=Crete+Round&family=Open+Sans:ital,wght@0,500;1,500&display=swap");
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+body {
+  font-family: "Crete Round", serif;
+  background-color: #ffffff;
+
+  height: 100vh;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+.nav {
+  display: flex;
+  padding: 10px 150px;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 5px solid #c3c2c2;
+  margin-bottom: 10px;
+}
+.date-input {
+  display: flex;
+  font-size: 1.4rem;
+  font-weight: 700;
+  justify-content: flex-end;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+.logo {
+  width: 100px;
+}
+.home-container {
+  display: flex;
+  margin-top: 50px;
+}
+
+.info-container {
+  width: 60%;
+}
+.info-section {
+  padding: 0 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.info-section h1 {
+  font-size: 50px;
+  line-height: 60px;
+}
+.info-section h3 {
+  font-size: 20px;
+}
+
+.connect-area {
+  display: flex;
+  gap: 24px;
+}
+
+.newMeet-btn {
+  padding: 10px 20px;
+  background-color: #960aee;
+  color: #ffffff;
+}
+.newMeet-btn:hover {
+  color: #960aee;
+  background-color: #ffffff;
+  border: 2px solid #960aee;
+  text-decoration: none;
+}
+.cam-icon {
+  margin-right: 10px;
+}
+.form {
+  display: flex;
+  gap: 20px;
+}
+#link-input {
+  padding: 12px 20px;
+  border: 1px solid #000;
+  font-size: 17px;
+  color: #000;
+}
+
+#join-btn {
+  padding: 0 15px;
+  background-color: #ffffff;
+
+  font-size: 18px;
+  color: #960aee;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+#join-btn.active {
+  color: #960aee;
+  border: 2px solid #960aee;
+}
+
+#join-btn.inactive {
+  color: #c3c2c2;
+  border: 2px solid #c3c2c2;
+}
+
+.underline {
+  border-bottom: 1px solid #8f8e8e;
+}
+.aboutUs {
+  display: flex;
+  gap: 10px;
+  font-size: 28px;
+}
+a {
+  color: #960aee;
+}
+a:hover {
+  text-decoration: underline;
+  text-underline-offset: 10px;
+}
+.img-container {
+  width: 25%;
+  border-radius: 30px;
+}
+.img-container img {
+  width: 100%;
+  height: 80%;
+  border-radius: 20px;
+}
+
+.img-container p {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  margin-top: 20px;
+}
+
+.about-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+.about-container h1 {
+  font-size: 24px;
+  width: 50%;
+}
+
+@media screen and (max-width: 1000px) {
+  .home-container {
+    flex-direction: column-reverse;
+  }
+
+  .info-container {
+    width: 100%;
+  }
+
+  .img-container {
+    margin-left: 20%;
+    width: 50%;
+    margin-bottom: 20px;
+  }
+}
+@media screen and (max-width: 500px) {
+  .img-container {
+    display: none;
+  }
+  .nav {
+    padding: 10px 10px;
+  }
+  .logo {
+    width: 20%;
+  }
+
+  .date-input {
+    font-size: 1.2rem;
+  }
+  .back-home {
+    margin-left: 50px;
+  }
+  .newMeet-btn {
+    padding: 8px 8px;
+  }
+  .newMeet-btn:hover {
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .info-container {
+    width: 100%;
+  }
+  .info-section {
+    padding: 0 15px;
+  }
+  .info-section h1 {
+    font-size: 32px;
+    line-height: 32px;
+  }
+  .info-section h3 {
+    font-size: 16px;
+  }
+  .connect-area {
+    flex-direction: column;
+  }
+  .newMeet-btn {
+    width: 45%;
+  }
+  .aboutUs {
+    font-size: 20px;
+  }
+  .back-home {
+    padding: 10px 20px;
+  }
+  .about-container h1 {
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+}
