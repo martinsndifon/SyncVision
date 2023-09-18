@@ -5,9 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/callPage.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
     />
     <title>SynVision</title>
   </head>
@@ -19,24 +24,93 @@
         <p class="time"></p>
       </div>
     </header>
-    <section id="stream-container">
-      <div id="steam-box"></div>
-      <div id="streams-container">
-        <div class="video-container" id="user-container-1">
-          <h1>1</h1>
+    <main>
+      <div class="main-frame">
+        <section id="stream-container">
+          <!-- <div id="stream-box"></div> -->
+          <div id="streams-container">
+            <div class="video-container" id="user-container-1"></div>
+            <div class="video-container-2" id="user-container-2"></div>
+          </div>
+        </section>
+        <section class="message-bar hide" id="container1">
+          <div class="message-container">
+            <div class="title">
+              <h2>Meeting details</h2>
+              <div class="close-icon">&times;</div>
+            </div>
+            <div id="link-display">
+              <h2>Joining info</h2>
+              <p>area to append link</p>
+              <div id="link">
+                <img src="./assets/copy-icon.png" alt="copyicon" />
+                <span><a href="#" id="copy-info"> copy joining info</a></span>
+              </div>
+            </div>
+            <div class="underlines"></div>
+            <div id="meeting-msg">
+              <p>SyncVison calender atachments shows up here</p>
+            </div>
+          </div>
+        </section>
+        <section class="message-bar" id="container2">
+          <div class="message-container">
+            <div class="title">
+              <h2>In-call messages</h2>
+              <div class="close-icon">&times;</div>
+            </div>
+            <div class="allow-msg">
+              <h3>Let everyone send messeges</h3>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="1em"
+                viewBox="0 0 448 512"
+              >
+                <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                <path
+                  d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
+                />
+              </svg>
+            </div>
+            <div class="msg-info allow-msg">
+              <p>
+                Messages can only be seen by people in the call and are deleted
+                when the call ends
+              </p>
+            </div>
+            <form id="chat-form">
+              <input
+                type="text"
+                name="chat"
+                id="chat-msg"
+                placeholder="Send a message"
+              />
+              <a href="#">
+                <img src="./assets/send-icon.png" alt="send img" id="icon" />
+              </a>
+            </form>
+          </div>
+        </section>
+      </div>
+      <div id="controls">
+        <!-- Buttons for call control -->
+        <div class="control-container" id="mic-btn">
+          <img src="./assets/mic.png" alt="mic icon" />
         </div>
-        <div class="video-container" id="user-container-2">
-          <h1>2</h1>
+        <div class="control-container" id="camera-btn">
+          <img src="./assets/camera.png" alt="camera icon" />
         </div>
-        <div class="video-container" id="user-container-3">
-          <h1>3</h1>
+        <div class="control-container" id="leave-btn">
+          <img src="./assets/phone.png" alt="end call icon" />
         </div>
-        <div class="video-container" id="user-container-4">
-          <h1>4</h1>
+        <div class="control-container" id="toggle-btn">
+          <img src="./assets/chat.png" alt="chat icon" id="icon1" />
+          <img src="./assets/info.png" alt="info icon" id="icon2" />
         </div>
       </div>
-    </section>
+    </main>
     <script type="module" src="./js/script1.js"></script>
     <script type="module" src="./js/callPage.js"></script>
+    <!-- <script type="module" src="./js/lobby.js"></script> -->
   </body>
 </html>

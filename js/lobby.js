@@ -62,3 +62,5 @@ function FunctionBlur() {
   submitButton.classList.add("inactive");
   submitButton.disabled = true;
 }
+
+// Background Image on Screen

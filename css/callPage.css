@@ -1,0 +1,246 @@
+/* #stream-container {
+  justify-self: center;
+  width: 100%;
+  position: fixed;
+  height: 100%;
+  overflow-y: auto;
+  margin-bottom: -30px;
+}
+
+#stream-box {
+  background-color: #838282;
+  height: 87vh;
+  display: none;
+}
+#stream-box .video-container {
+  border: 2px solid #000;
+  border-radius: 0;
+  height: 100% !important;
+  width: 100% !important;
+}
+#stream-box video {
+  border-radius: 0;
+}
+
+#streams-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 25px;
+  margin-bottom: 50px;
+}
+.video-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #000;
+  cursor: pointer;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vh;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  background-image: url("../assets/video-img.png");
+  background-color: #a19f9f;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 200px;
+}
+.video-player {
+  height: 100%;
+  width: 100%;
+}
+
+.video-player video {
+  border-radius: 10px;
+} */
+
+.main-frame {
+  display: flex;
+  gap: 5px;
+  padding: 0 20px;
+}
+#stream-container {
+  width: 80%;
+}
+#streams-container {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  /* position: relative; */
+}
+
+.video-container {
+  border: 1px solid #000;
+  cursor: pointer;
+  overflow: hidden;
+  height: 73vh;
+  width: 80%;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  background-image: url("../assets/video-img.png");
+  background-color: #a19f9f;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 200px;
+}
+.video-container-2 {
+  width: 200px;
+  height: 150px;
+  background-color: #a19f9f;
+  /* position: absolute; */
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  /* top: 0;
+  left: 0; */
+  /* margin: 10px; */
+}
+.message-bar {
+  width: 20%;
+}
+.message-container {
+  background-color: #585858;
+  height: 100%;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 0 20px;
+}
+#container2,
+#icon2 {
+  display: none;
+}
+.title {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 15px;
+}
+.title h2 {
+  font-size: 16px;
+}
+.close-icon {
+  margin-top: -10px;
+  font-size: 30px;
+}
+#link-display h2 {
+  font-size: 13px;
+  margin-top: 10px;
+}
+#copy-info {
+  text-decoration: none;
+  color: #a5a5ff;
+  font-size: 13px;
+}
+#link:hover {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  color: #a5a5ff;
+}
+#link img {
+  width: 15px;
+  color: #a5a5ff;
+  filter: hue-rotate(90deg);
+  padding-top: 10px;
+}
+.underlines {
+  margin-top: 16px;
+  border-bottom: 1px solid #a19f9f;
+}
+
+#meeting-msg p {
+  margin-top: 16px;
+  font-size: 10px;
+}
+
+/* message chat box */
+
+.allow-msg {
+  display: flex;
+  justify-content: space-between;
+  background-color: #717070;
+  padding: 8px 10px;
+  margin: 10px -10px;
+  border-radius: 5px;
+}
+.allow-msg h3 {
+  font-size: 11px;
+}
+.allow-msg svg path {
+  fill: #fff;
+}
+.msg-info p {
+  font-size: 10px;
+  text-align: center;
+}
+#chat-form {
+  background-color: #717070;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 10px;
+  margin: 10px -10px;
+  border-radius: 15px;
+  margin-top: 335px;
+  /* padding-bottom: -20px; */
+}
+#chat-msg {
+  font-size: 12px;
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  width: 120%;
+}
+#chat-msg::placeholder {
+  color: #fff;
+}
+#chat-msg:focus {
+  outline: none;
+  border: none;
+}
+#icon {
+  width: 20px;
+  margin-top: 6px;
+}
+
+.control-container {
+  background-color: #b366f9e6;
+  padding: 10px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.control-container img {
+  height: 25px;
+  width: 25px;
+}
+
+#controls {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
+.control-btn {
+  background-color: none;
+  border: 1px solid #000;
+  border-radius: 50%;
+  padding: 10px;
+}
+
+@media screen and (max-width: 1400px) {
+  .video-container {
+    height: 270px;
+    width: 270px;
+  }
+}
+@media screen and (max-width: 768px) {
+  .video-container {
+    height: 150px;
+    width: 150px;
+  }
+}
