@@ -78,22 +78,6 @@
 
 // displayFrame.addEventListener("click", hideDisplayFrame);
 
-// function toggleContainers() {
-//   let container1 = document.getElementById("container1");
-//   let container2 = document.getElementById("container2");
-//   let toggleButton = document.getElementById("toggle-btn");
-
-//   if (container1.style.display === "none") {
-//     container1.style.display = "block";
-//     container2.style.display = "none";
-//   } else {
-//     container1.style.display = "none";
-//     container2.style.display = "block";
-//   }
-// }
-
-// toggleButton.addEventListener("click", toggleContainers);
-
 document.addEventListener("DOMContentLoaded", function () {
   var container1 = document.getElementById("container1");
   var container2 = document.getElementById("container2");

@@ -61,6 +61,7 @@
   display: flex;
   gap: 5px;
   padding: 0 20px;
+  height: 73vh;
 }
 #stream-container {
   width: 80%;
@@ -68,16 +69,17 @@
 #streams-container {
   width: 100%;
   display: flex;
-  gap: 20px;
-  /* position: relative; */
+  padding-left: 130px;
+  gap: 40px;
+  height: 100%;
 }
 
 .video-container {
   border: 1px solid #000;
   cursor: pointer;
   overflow: hidden;
-  height: 73vh;
-  width: 80%;
+  width: 75%;
+  height: 100%;
   border-radius: 10px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
   background-image: url("../assets/video-img.png");
@@ -86,16 +88,24 @@
   background-position: center;
   background-size: 200px;
 }
+.card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: auto;
+  width: 20%;
+  /* height: 100%; */
+}
 .video-container-2 {
+  border: 1px solid #000;
   width: 200px;
   height: 150px;
   background-color: #a19f9f;
-  /* position: absolute; */
   border-radius: 10px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
-  /* top: 0;
-  left: 0; */
-  /* margin: 10px; */
+}
+#leave-btn {
+  background-color: #f85858;
 }
 .message-bar {
   width: 20%;
@@ -186,14 +196,14 @@
   /* padding-bottom: -20px; */
 }
 #chat-msg {
-  font-size: 12px;
+  font-size: 14px;
   background-color: transparent;
   border: none;
   color: #fff;
-  width: 120%;
+  width: 85%;
 }
 #chat-msg::placeholder {
-  color: #fff;
+  color: #afaeae;
 }
 #chat-msg:focus {
   outline: none;
@@ -202,6 +212,10 @@
 #icon {
   width: 20px;
   margin-top: 6px;
+  transition: transform 0.3s ease;
+}
+#icon:hover {
+  transform: scale(1.2);
 }
 
 .control-container {
