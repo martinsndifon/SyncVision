@@ -1,38 +1,41 @@
-@import url("https://fonts.googleapis.com/css2?family=Crete+Round&family=Open+Sans:ital,wght@0,500;1,500&display=swap");
-
 *,
 *::before,
 *::after {
   margin: 0;
   padding: 0;
-  list-style: none;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  font-family: Arial, sans-serif;
   box-sizing: border-box;
   text-decoration: none;
 }
 
 body {
-  font-family: "Crete Round", serif;
   background-color: #ffffff;
-
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   height: 100vh;
+  overflow: hidden;
 }
 
 html {
   scroll-behavior: smooth;
 }
 .nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
-  padding: 10px 150px;
-  justify-content: space-between;
+  padding: 10px 15px;
+  justify-content: center;
   align-items: center;
-  border-bottom: 5px solid #c3c2c2;
-  margin-bottom: 10px;
-}
-.date-input {
-  display: flex;
-  font-size: 1.4rem;
-  font-weight: 700;
-  justify-content: flex-end;
+  border-bottom: 1px solid #c3c2c2;
+  margin-bottom: 3px;
+  z-index: 10;
 }
 
 .container {
@@ -45,23 +48,6 @@ html {
 .home-container {
   display: flex;
   margin-top: 50px;
-}
-
-.info-container {
-  width: 60%;
-}
-.info-section {
-  padding: 0 150px;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-.info-section h1 {
-  font-size: 50px;
-  line-height: 60px;
-}
-.info-section h3 {
-  font-size: 20px;
 }
 
 .connect-area {
@@ -140,7 +126,7 @@ a:hover {
 }
 
 .img-container p {
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   margin-top: 20px;
 }
 
