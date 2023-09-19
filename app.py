@@ -36,7 +36,7 @@ def on_join(data):
         clients[room][userId] = request.sid  # type: ignore
 
     data = {'userId': userId, 'type': 'join'}
-    send(data, to=room)
+    send(data, to=room, skip_sid=request.sid)  # type: ignore
     emit('ready', userId, to=room,
          skip_sid=request.sid)  # type: ignore
 

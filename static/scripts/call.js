@@ -1,44 +1,69 @@
 'use strict';
 
-const videoGrid = document.getElementById('video-grid');
-const messageBox = document.getElementById('messagesbox');
-const sendbutton = document.getElementById('send');
-const inputbox = document.getElementById('inputbox');
-const endCall = document.getElementById('endcall');
+const videoGrid = document.getElementById('remote-videos');
+const localVideoGrid = document.getElementById('local-video');
+const messageBox = document.getElementById('chat-messages');
+const sendbutton = document.getElementById('sendMessageButton');
+const messageInput = document.getElementById('messageInput');
+const endCall = document.getElementById('leave-btn');
 const audioToggle = document.getElementById('audiotoggle');
 const videoToggle = document.getElementById('videotoggle');
+const audioImage = document.getElementById('audioImage');
+const videoImage = document.getElementById('videoImage');
 
 audioToggle.addEventListener('click', toggleAudio);
 videoToggle.addEventListener('click', toggleVideo);
 
 //function to mute/unmute audio
-function toggleAudio (e) {
+function toggleAudio(e) {
   const audioTracks = localStream.getAudioTracks();
   const defaultTrack = audioTracks[0];
   if (defaultTrack.enabled) {
     defaultTrack.enabled = false;
+    // styling
+    audioToggle.style.backgroundColor = '#ed2939';
+    audioImage.src = '../static/images/micoff.svg';
   } else {
     defaultTrack.enabled = true;
+    // add styling
+    audioToggle.style.backgroundColor = '#8a8991e6';
+    audioImage.src = '../static/images/mic.svg';
   }
 }
 
-function toggleVideo (e) {
+function toggleVideo(e) {
   const videoTracks = localStream.getVideoTracks();
   const defaultTrack = videoTracks[0];
   if (defaultTrack.enabled) {
     defaultTrack.enabled = false;
+    // style
+    videoToggle.style.backgroundColor = '#ed2939';
+    videoToggle.children[0].innerText = 'videocam_off'
   } else {
     defaultTrack.enabled = true;
+    // style
+    videoToggle.style.backgroundColor = '#8a8991e6';
+    videoToggle.children[0].innerText = 'videocam'
   }
 }
 
 const socket = io({ autoConnect: false });
 const connectedPeers = {};
 
-sendbutton.addEventListener('click', (e) => {
-  const message = inputbox.value;
-  socket.emit('chat', { from: userId, message, type: 'chat', to: roomId });
-  inputbox.value = '';
+const sendMessage = () => {
+  const message = messageInput.value.trim();
+  if (message !== '') {
+    socket.emit('chat', { from: userId, message, type: 'chat', to: roomId });
+    messageInput.value = '';
+  }
+};
+
+sendbutton.addEventListener('click', sendMessage);
+messageInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    sendMessage();
+    e.preventDefault();
+  }
 });
 
 // Function to emit the 'leave' event
@@ -68,13 +93,19 @@ socket.on('message', (message) => {
   if (message.type == 'chat') {
     const from = message.from;
     const m = message.message;
+    const div = document.createElement('div');
+    const header = document.createElement('h6');
+    header.setAttribute('class', 'message-header');
     const p = document.createElement('p');
-    const content = `From ${from}: ${m}`;
-    p.textContent = content;
-    messageBox.append(p);
+    p.setAttribute('class', 'message');
+    p.textContent = m;
+    header.textContent = from;
+    div.appendChild(header);
+    div.appendChild(p);
+    messageBox.append(div);
   } else if (message.type == 'join') {
     const joinedUserId = message.userId;
-    displayMessage(`${joinedUserId} joined the room: ${roomId}`);
+    flashMessage(`${joinedUserId} joined`);
   } else {
     // On 'leave', remove the user video element and their connection object
     const peerUserId = message.userId;
@@ -83,15 +114,18 @@ socket.on('message', (message) => {
       remoteVideo.remove();
     }
     delete connectedPeers[peerUserId];
-    displayMessage(`${message.userId} has left the room: ${roomId}`);
+    flashMessage(`${message.userId} left`);
   }
 });
 
-function displayMessage(message) {
-  const messagesDiv = document.getElementById('messages');
-  const messageElement = document.createElement('div');
-  messageElement.textContent = message;
-  messagesDiv.appendChild(messageElement);
+function flashMessage(message) {
+  const flashMessage = document.getElementById('flash-message');
+  flashMessage.textContent = message;
+  flashMessage.classList.add('show');
+
+  setTimeout(() => {
+    flashMessage.classList.remove('show');
+  }, 1000);
 }
 
 // New code to try webRTC connection
@@ -103,10 +137,10 @@ const createLocalVideo = () => {
   localVideo.setAttribute('autoplay', true);
   localVideo.setAttribute('muted', true);
   localVideo.setAttribute('playsinline', true);
-  localVideo.setAttribute('id', 'localVideo');
+  localVideo.setAttribute('id', 'local-video');
 
   // Append the video elements to the DOM
-  videoGrid.appendChild(localVideo);
+  localVideoGrid.appendChild(localVideo);
 };
 
 let localStream;
@@ -150,6 +184,24 @@ const onIceCandidate = async (event, peerUserId) => {
   }
 };
 
+// helper function for onTrack
+const orderVideos = () => {
+  // Calculate the number of videos and adjust their size
+  const remoteVideos = videoGrid.querySelectorAll('.remote-video');
+  const videoCount = remoteVideos.length;
+  const maxVideosPerRow = 3;
+
+  remoteVideos.forEach((video) => {
+    video.style.maxWidth = `calc(100% / ${Math.min(
+      maxVideosPerRow,
+      videoCount
+    )} - 10px)`;
+    video.style.maxHeight = `calc(100% / ${Math.ceil(
+      videoCount / maxVideosPerRow
+    )} - 10px)`;
+  });
+};
+
 // Set the srcObject of the remote video element’s reference to the first stream in the track
 const onTrack = (event, peerUserId) => {
   console.log('Adding remote track for user: ' + peerUserId);
@@ -160,9 +212,11 @@ const onTrack = (event, peerUserId) => {
     remoteVideo.setAttribute('autoplay', true);
     remoteVideo.setAttribute('playsinline', true);
     remoteVideo.setAttribute('id', `remoteVideo_${peerUserId}`);
+    remoteVideo.setAttribute('class', 'remote-video');
     videoGrid.appendChild(remoteVideo);
   }
   remoteVideo.srcObject = event.streams[0];
+  orderVideos();
 };
 
 // Create a new peer connection

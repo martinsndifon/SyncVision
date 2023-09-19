@@ -1,38 +1,42 @@
-@import url("https://fonts.googleapis.com/css2?family=Crete+Round&family=Open+Sans:ital,wght@0,500;1,500&display=swap");
-
 *,
 *::before,
 *::after {
   margin: 0;
   padding: 0;
-  list-style: none;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  font-family: Arial, sans-serif;
   box-sizing: border-box;
   text-decoration: none;
 }
 
 body {
-  font-family: "Crete Round", serif;
   background-color: #ffffff;
-
+  /* height: 100vh; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   height: 100vh;
+  overflow: hidden;
 }
 
 html {
   scroll-behavior: smooth;
 }
 .nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
-  padding: 10px 150px;
-  justify-content: space-between;
+  padding: 10px 15px;
+  justify-content: center;
   align-items: center;
-  border-bottom: 5px solid #c3c2c2;
-  margin-bottom: 10px;
-}
-.date-input {
-  display: flex;
-  font-size: 1.4rem;
-  font-weight: 700;
-  justify-content: flex-end;
+  border-bottom: 1px solid #c3c2c2;
+  margin-bottom: 3px;
+  z-index: 10;
 }
 
 .container {
@@ -57,16 +61,17 @@ html {
   gap: 28px;
 }
 .info-section h1 {
-  font-size: 50px;
-  line-height: 60px;
+  font-size: 5rem;
+  line-height: 1;
 }
-.info-section h3 {
-  font-size: 20px;
+.info-section p {
+  font-size: 1.2rem;
+  line-height: 1.5;
 }
 
 .connect-area {
   display: flex;
-  gap: 24px;
+  gap: 0.5rem;
 }
 
 .newMeet-btn {
@@ -85,12 +90,12 @@ html {
 }
 .form {
   display: flex;
-  gap: 20px;
+  gap: 1rem;
 }
 #link-input {
   padding: 12px 20px;
   border: 1px solid #000;
-  font-size: 17px;
+  font-size: 1rem;
   color: #000;
 }
 
@@ -98,7 +103,7 @@ html {
   padding: 0 15px;
   background-color: #ffffff;
 
-  font-size: 18px;
+  font-size: 1rem;
   color: #960aee;
   border-radius: 2px;
   cursor: pointer;
@@ -120,18 +125,17 @@ html {
 .aboutUs {
   display: flex;
   gap: 10px;
-  font-size: 28px;
+  font-size: 1.2rem;
 }
 a {
   color: #960aee;
 }
 a:hover {
   text-decoration: underline;
-  text-underline-offset: 10px;
 }
 .img-container {
   width: 25%;
-  border-radius: 30px;
+  /* border-radius: 30px; */
 }
 .img-container img {
   width: 100%;
@@ -140,7 +144,7 @@ a:hover {
 }
 
 .img-container p {
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   margin-top: 20px;
 }
 

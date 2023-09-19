@@ -1,0 +1,180 @@
+.material-symbols-outlined {
+  color: #fff;
+}
+
+main {
+  display: flex;
+  height: 75%;
+  width: 75%;
+  align-items: center;
+  justify-content: center;
+}
+.main-frame {
+  display: flex;
+  gap: 5px;
+  padding: 5px;
+  height: 100%;
+  width: 100%;
+}
+
+#local-video {
+  width: 40%;
+  height: auto;
+  position: absolute;
+  border-radius: 10px;
+  top: 0;
+  left: 0;
+  margin-top: 30px;
+  margin-left: 7px;
+}
+
+#remote-videos {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-content: center;
+  justify-content: center;
+  overflow-y: auto;
+  max-height: calc(100vh - 150px);
+}
+
+.remote-video {
+  max-width: calc(100% / 3 - 10px); /* 3 videos per row with 10px gap */
+  max-height: calc(100% / 2 - 10px); /* 2 rows of videos with 10px gap */
+  border-radius: 5px;
+}
+
+.chat-section {
+  position: fixed;
+  top: 10%;
+  width: 300px;
+  height: 80%;
+  background-color: #fff;
+  box-shadow: -1px 0px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  z-index: 20;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  right: 0;
+  transform: translateX(200%);
+  padding: 0;
+}
+
+.chat-section .chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+}
+
+.chat-section #chat-messages {
+  padding: 10px;
+  overflow-y: auto;
+  height: calc(100% - 100px);
+}
+
+.chat-section .chat-input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px;
+}
+
+.chat-input input {
+  /* flex-grow: 1; */
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 2px;
+}
+
+.chat-input button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-right: 1px;
+}
+
+.message-header {
+  margin-bottom: 0;
+  color: #1c7414;
+  font-size: x-small;
+}
+.message {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.close-button {
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.control-container {
+  background-color: #8a8991e6;
+  padding: 10px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+#leave-btn {
+  background-color: #ed2939;
+  border-radius: 20%;
+}
+
+#leave-btn img {
+  width: 30px;
+}
+
+.control-container img {
+  height: 20px;
+  width: 20px;
+}
+
+#controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin: 20px;
+}
+/* Flash message section*/
+.flash-message {
+  position: fixed;
+  bottom: 20px; /* Adjust the distance from the bottom as needed */
+  left: 15%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 50;
+}
+
+.flash-message.show {
+  opacity: 1;
+}
+
+@media (max-width: 750px) {
+  #local-video {
+    width: 50%;
+  }
+
+  .flash-message {
+    bottom: 80px;
+    left: 50%;
+  }
+}
