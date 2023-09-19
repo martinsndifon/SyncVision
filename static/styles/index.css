@@ -232,8 +232,19 @@ footer a {
         font-size: 1.3rem;
     }
 
+    .action {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .action_link {
+        margin-block-end: 0rem;
+    }
+
     form {
-        margin-bottom: .8rem;
+        margin-bottom: 0rem;
     }
 
     footer {
