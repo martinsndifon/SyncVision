@@ -13,8 +13,7 @@
 body {
   font-family: "Crete Round", serif;
   background-color: #ffffff;
-
-  height: 100vh;
+  /* height: 100vh; */
 }
 
 html {
@@ -57,16 +56,17 @@ html {
   gap: 28px;
 }
 .info-section h1 {
-  font-size: 50px;
-  line-height: 60px;
+  font-size: 5rem;
+  line-height: 1;
 }
-.info-section h3 {
-  font-size: 20px;
+.info-section p {
+  font-size: 1.2rem;
+  line-height: 1.5;
 }
 
 .connect-area {
   display: flex;
-  gap: 24px;
+  gap: .5rem;
 }
 
 .newMeet-btn {
@@ -85,12 +85,12 @@ html {
 }
 .form {
   display: flex;
-  gap: 20px;
+  gap: 1rem;
 }
 #link-input {
   padding: 12px 20px;
   border: 1px solid #000;
-  font-size: 17px;
+  font-size: 1rem;
   color: #000;
 }
 
@@ -98,7 +98,7 @@ html {
   padding: 0 15px;
   background-color: #ffffff;
 
-  font-size: 18px;
+  font-size: 1rem;
   color: #960aee;
   border-radius: 2px;
   cursor: pointer;
@@ -120,18 +120,17 @@ html {
 .aboutUs {
   display: flex;
   gap: 10px;
-  font-size: 28px;
+  font-size: 1.2rem;
 }
 a {
   color: #960aee;
 }
 a:hover {
   text-decoration: underline;
-  text-underline-offset: 10px;
 }
 .img-container {
   width: 25%;
-  border-radius: 30px;
+  /* border-radius: 30px; */
 }
 .img-container img {
   width: 100%;
