@@ -13,16 +13,13 @@
 
 body {
   background-color: #ffffff;
-<<<<<<< HEAD:static/css/styles.css
   /* height: 100vh; */
-=======
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
   overflow: hidden;
->>>>>>> 89bd9951601cc2ad7533dd767331a3e887354ddb:static/styles/styles.css
 }
 
 html {
@@ -54,7 +51,6 @@ html {
   margin-top: 50px;
 }
 
-<<<<<<< HEAD:static/css/styles.css
 .info-container {
   width: 60%;
 }
@@ -73,11 +69,9 @@ html {
   line-height: 1.5;
 }
 
-=======
->>>>>>> 89bd9951601cc2ad7533dd767331a3e887354ddb:static/styles/styles.css
 .connect-area {
   display: flex;
-  gap: .5rem;
+  gap: 0.5rem;
 }
 
 .newMeet-btn {
