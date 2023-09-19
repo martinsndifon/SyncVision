@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WebRTC test</title>
+    <link rel="stylesheet" href="../static/styles/styles.css" />
+    <link rel="stylesheet" href="../static/styles/call.css" />
+    <title>SynVision - {{ room_id }}</title>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
       integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
@@ -14,30 +16,65 @@
       const roomId = '{{ room_id }}';
       const userId = '{{ userId }}';
     </script>
+    <script
+      type="module"
+      src="../static/scripts/frontend_call.js"
+      defer
+    ></script>
     <script src="../static/scripts/call.js" defer></script>
-    <style>
-      #video-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, 300px);
-        grid-auto-rows: 300px;
-      }
-      video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    </style>
   </head>
   <body>
-    Call page
-    <div id="video-grid"></div>
-    <div id="messages"></div>
-    <div id="messagesbox">
-      <input type="text" id="inputbox" placeholder="Enter a message" />
-      <button id="send">send</button>
-    </div>
-    <button id="endcall">End call</button>
-    <button id="audiotoggle">Enable/Disable Audio</button>
-    <button id="videotoggle">Enable/Disable Video</button>
+    <header class="nav">
+      <a href="{{ url_for('app_views.home') }}">
+        <img src="../static/images/Logo1.png" alt="logo" class="logo" />
+      </a>
+    </header>
+    <main>
+      <div class="main-frame">
+        <div id="local-video"></div>
+        <div id="remote-videos"></div>
+        <!-- Chat Section -->
+        <div class="chat-section">
+          <div class="chat-header">
+            <h3>Chat</h3>
+            <button id="closeChatButton" class="close-button">&#10006;</button>
+          </div>
+          <div id="chat-messages"></div>
+          <div class="chat-input">
+            <input
+              type="text"
+              id="messageInput"
+              placeholder="Type your message..."
+            />
+            <button id="sendMessageButton">Send</button>
+          </div>
+        </div>
+      </div>
+      <div id="controls">
+        <!-- Buttons for call control -->
+        <button type="button" class="control-container" id="audiotoggle">
+          <img src="../static/images/mic.svg" alt="mic icon" id="audioImage" />
+        </button>
+        <button type="button" class="control-container" id="videotoggle">
+          <img
+            src="../static/images/video.svg"
+            alt="camera icon"
+            id="videoImage"
+          />
+        </button>
+        <button
+          type="button"
+          id="chatButton"
+          class="control-container"
+          id="chatButton"
+        >
+          <img src="../static/images/chat.svg" alt="end call icon" />
+        </button>
+        <button type="button" class="control-container" id="leave-btn">
+          <img src="../static/images/call.svg" alt="end call icon" />
+        </button>
+      </div>
+    </main>
+    <div id="flash-message" class="flash-message"></div>
   </body>
 </html>
