@@ -38,12 +38,12 @@ function toggleVideo(e) {
     defaultTrack.enabled = false;
     // style
     videoToggle.style.backgroundColor = '#ed2939';
-    videoImage.src = '../static/images/videooff.svg';
+    videoToggle.children[0].innerText = 'videocam_off'
   } else {
     defaultTrack.enabled = true;
     // style
     videoToggle.style.backgroundColor = '#8a8991e6';
-    videoImage.src = '../static/images/video.svg';
+    videoToggle.children[0].innerText = 'videocam'
   }
 }
 
