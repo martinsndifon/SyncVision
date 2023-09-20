@@ -8,8 +8,8 @@ const messageInput = document.getElementById('messageInput');
 const endCall = document.getElementById('leave-btn');
 const audioToggle = document.getElementById('audiotoggle');
 const videoToggle = document.getElementById('videotoggle');
-const audioImage = document.getElementById('audioImage');
-const videoImage = document.getElementById('videoImage');
+const placeholderText = document.getElementById('placeholder-text');
+const infoSection = document.getElementById('info-section');
 
 audioToggle.addEventListener('click', toggleAudio);
 videoToggle.addEventListener('click', toggleVideo);
@@ -22,12 +22,12 @@ function toggleAudio(e) {
     defaultTrack.enabled = false;
     // styling
     audioToggle.style.backgroundColor = '#ed2939';
-    audioImage.src = '../static/images/micoff.svg';
+    audioToggle.children[0].innerText = 'mic_off';
   } else {
     defaultTrack.enabled = true;
     // add styling
-    audioToggle.style.backgroundColor = '#8a8991e6';
-    audioImage.src = '../static/images/mic.svg';
+    audioToggle.style.backgroundColor = '#960aee';
+    audioToggle.children[0].innerText = 'mic';
   }
 }
 
@@ -38,12 +38,12 @@ function toggleVideo(e) {
     defaultTrack.enabled = false;
     // style
     videoToggle.style.backgroundColor = '#ed2939';
-    videoToggle.children[0].innerText = 'videocam_off'
+    videoToggle.children[0].innerText = 'videocam_off';
   } else {
     defaultTrack.enabled = true;
     // style
-    videoToggle.style.backgroundColor = '#8a8991e6';
-    videoToggle.children[0].innerText = 'videocam'
+    videoToggle.style.backgroundColor = '#960aee';
+    videoToggle.children[0].innerText = 'videocam';
   }
 }
 
@@ -77,13 +77,9 @@ endCall.addEventListener('click', async () => {
   window.location.href = 'http://127.0.0.1:5000/';
 });
 
-window.addEventListener('beforeunload', () => {
-  emitLeaveEvent();
-});
+window.addEventListener('beforeunload', emitLeaveEvent);
 
-window.addEventListener('unload', () => {
-  emitLeaveEvent();
-});
+window.addEventListener('unload', emitLeaveEvent);
 
 socket.on('connect', function () {
   socket.emit('my event', { data: "I'm connected!" });
@@ -114,6 +110,12 @@ socket.on('message', (message) => {
       remoteVideo.remove();
     }
     delete connectedPeers[peerUserId];
+
+    if (Object.keys(connectedPeers).length === 0) {
+      placeholderText.style.display = 'block';
+      infoSection.classList.remove('hide');
+      infoSection.classList.add('show');
+    }
     flashMessage(`${message.userId} left`);
   }
 });
@@ -189,7 +191,7 @@ const orderVideos = () => {
   // Calculate the number of videos and adjust their size
   const remoteVideos = videoGrid.querySelectorAll('.remote-video');
   const videoCount = remoteVideos.length;
-  const maxVideosPerRow = 3;
+  const maxVideosPerRow = window.innerWidth >= 750 ? 3 : 2;
 
   remoteVideos.forEach((video) => {
     video.style.maxWidth = `calc(100% / ${Math.min(
@@ -201,6 +203,8 @@ const orderVideos = () => {
     )} - 10px)`;
   });
 };
+// order videos on resize of window
+window.addEventListener('resize', orderVideos);
 
 // Set the srcObject of the remote video element’s reference to the first stream in the track
 const onTrack = (event, peerUserId) => {
@@ -214,6 +218,13 @@ const onTrack = (event, peerUserId) => {
     remoteVideo.setAttribute('id', `remoteVideo_${peerUserId}`);
     remoteVideo.setAttribute('class', 'remote-video');
     videoGrid.appendChild(remoteVideo);
+  }
+  if (!(getComputedStyle(placeholderText).display === 'none')) {
+    placeholderText.style.display = 'none';
+    if (infoSection.classList.contains('show')) {
+      infoSection.classList.remove('show');
+      infoSection.classList.add('hide');
+    }
   }
   remoteVideo.srcObject = event.streams[0];
   orderVideos();

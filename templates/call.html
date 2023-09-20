@@ -3,7 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
 
     <link rel="stylesheet" href="../static/styles/styles.css" />
     <link rel="stylesheet" href="../static/styles/call.css" />
@@ -26,15 +29,15 @@
     <script src="../static/scripts/call.js" defer></script>
   </head>
   <body>
-    <header class="nav">
-      <a href="{{ url_for('app_views.home') }}">
-        <img src="../static/images/Logo1.png" alt="logo" class="logo" />
-      </a>
-    </header>
     <main>
       <div class="main-frame">
         <div id="local-video"></div>
-        <div id="remote-videos"></div>
+        <div id="remote-videos">
+          <p id="placeholder-text">
+            You're alone in the meeting, invite others.
+          </p>
+        </div>
+
         <!-- Chat Section -->
         <div class="chat-section">
           <div class="chat-header">
@@ -48,19 +51,43 @@
               id="messageInput"
               placeholder="Type your message..."
             />
-            <button id="sendMessageButton">Send</button>
+            <button id="sendMessageButton" class="material-symbols-outlined">
+              send
+            </button>
+          </div>
+        </div>
+
+        <!-- Info section -->
+        <div id="info-section" class="info-section show">
+          <div class="info-header">
+            <h3>Your meeting is ready</h3>
+            <button id="close-info-button" class="close-button">
+              &#10006;
+            </button>
+          </div>
+          <div class="information">
+            <p>Share this meeting link with others you want in the meeting</p>
+            <div class="copy-main">
+              <p id="copy-text" class="copy-text">{{ room_id }}</p>
+              <button
+                id="copy-button"
+                class="material-symbols-outlined copy-button"
+              >
+                content_copy
+              </button>
+            </div>
+            <p>Joined as |username|</p>
           </div>
         </div>
       </div>
+
       <div id="controls">
         <!-- Buttons for call control -->
         <button type="button" class="control-container" id="audiotoggle">
-          <img src="../static/images/mic.svg" alt="mic icon" id="audioImage" />
+          <span class="material-symbols-outlined"> mic </span>
         </button>
         <button type="button" class="control-container" id="videotoggle">
-          <span class="material-symbols-outlined">
-            videocam
-          </span>
+          <span class="material-symbols-outlined"> videocam </span>
         </button>
         <button
           type="button"
@@ -68,15 +95,16 @@
           class="control-container"
           id="chatButton"
         >
-          <span class="material-symbols-outlined">
-            chat
-          </span>
+          <span class="material-symbols-outlined"> chat </span>
         </button>
         <button type="button" class="control-container" id="leave-btn">
-          <img src="../static/images/call.svg" alt="end call icon" />
+          <span class="material-symbols-outlined"> call_end </span>
         </button>
       </div>
     </main>
     <div id="flash-message" class="flash-message"></div>
+    <div id="info-button" class="material-symbols-outlined info-button">
+      info
+    </div>
   </body>
 </html>
