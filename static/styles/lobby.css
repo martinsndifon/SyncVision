@@ -92,6 +92,15 @@ footer a {
 }
 
 
+/* Color For Button states */
+.control-container.disable_color {
+  background-color: #f85858;
+}
+.control-container.enable_color {
+  background-color: #960aee;
+}
+/* End of Color for Button states */
+
 @media (min-width: 1280px) {
   .container {
     display: flex;
