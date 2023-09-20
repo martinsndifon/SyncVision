@@ -61,7 +61,10 @@
         <div id="info-section" class="info-section show">
           <div class="info-header">
             <h3>Your meeting is ready</h3>
-            <button id="close-info-button" class="close-button">
+            <button
+              id="close-info-button"
+              class="close-button close-button-info"
+            >
               &#10006;
             </button>
           </div>
@@ -76,7 +79,7 @@
                 content_copy
               </button>
             </div>
-            <p>Joined as |username|</p>
+            <p>Joined as {{ username }}</p>
           </div>
         </div>
       </div>

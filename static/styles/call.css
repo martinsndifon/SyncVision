@@ -120,6 +120,10 @@ main {
   cursor: pointer;
 }
 
+.close-button.close-button-info {
+  color: #000;
+}
+
 .control-container {
   background-color: #960aee;
   padding: 10px;
@@ -165,7 +169,7 @@ main {
   width: 300px;
   height: 28%;
   background-color: #fff;
-  box-shadow: -1px 0px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: -1px 0px 10px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease;
   z-index: 30;
   overflow-x: hidden;
@@ -196,7 +200,7 @@ main {
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  color: #fff;
+  padding-left: 0;
 }
 
 .information {
@@ -210,14 +214,14 @@ main {
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  background-color: rgb(48, 47, 47);
+  background-color: #960aee;
   border-radius: 3px;
   margin: 20px 0;
 }
 
 .copy-main .copy-text {
   font-size: x-small;
-  color: purple;
+  color: #fff;
 }
 
 .copy-button {
@@ -234,6 +238,7 @@ main {
   margin-bottom: 20px;
   right: 40px;
   cursor: pointer;
+  color: #960aee;
 }
 
 /* Flash message section*/
