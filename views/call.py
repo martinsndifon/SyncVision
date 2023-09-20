@@ -14,8 +14,6 @@ def callHandler():
     mute_audio = request.form.get('mute_audio')
     disable_video = request.form.get('disable_video')
     userId = session.get('userId')
-    print('Username =', username)
-    print('Mute Audio', mute_audio, '\nType', type(mute_audio))
     constraints = {'audio': True, 'video': True}
     if not username and not userId:
         return redirect(url_for('app_views.home'))
@@ -30,7 +28,8 @@ def callHandler():
         constraints['video'] = False
     else:
         constraints['video'] = True
-
+    print('*' * 50)
+    print('CONSTRAINTS', constraints)
     # Store media constraints from user
     session['constraints'] = constraints
     if room_id:
