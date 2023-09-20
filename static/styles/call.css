@@ -4,8 +4,8 @@
 
 main {
   display: flex;
-  height: 75%;
-  width: 75%;
+  height: 70%;
+  width: 70%;
   align-items: center;
   justify-content: center;
 }
@@ -24,8 +24,9 @@ main {
   border-radius: 10px;
   top: 0;
   left: 0;
-  margin-top: 30px;
-  margin-left: 7px;
+  margin-top: 5px;
+  margin-left: 5px;
+  z-index: 2;
 }
 
 #remote-videos {
@@ -37,17 +38,19 @@ main {
   justify-content: center;
   overflow-y: auto;
   max-height: calc(100vh - 150px);
+  z-index: 3;
 }
 
 .remote-video {
-  max-width: calc(100% / 3 - 10px); /* 3 videos per row with 10px gap */
-  max-height: calc(100% / 2 - 10px); /* 2 rows of videos with 10px gap */
+  max-width: calc(100% / 3 - 10px);
+  max-height: calc(100% / 2 - 10px);
   border-radius: 5px;
 }
+/*Chat section*/
 
 .chat-section {
   position: fixed;
-  top: 10%;
+  top: 1%;
   width: 300px;
   height: 80%;
   background-color: #fff;
@@ -66,7 +69,7 @@ main {
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  background-color: #007bff;
+  background-color: #960aee;
   color: #fff;
 }
 
@@ -78,32 +81,30 @@ main {
 
 .chat-section .chat-input {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding: 3px;
 }
 
 .chat-input input {
-  /* flex-grow: 1; */
   padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-right: 2px;
+  border: none;
+  border-radius: 5px 0 0 5px;
+  margin: 0;
+  width: 300px;
 }
 
 .chat-input button {
-  background-color: #007bff;
+  background-color: #960aee;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 0 5px 5px 0;
   padding: 5px 10px;
   cursor: pointer;
-  margin-right: 1px;
+  margin: 0;
 }
 
 .message-header {
   margin-bottom: 0;
-  color: #1c7414;
+  color: #960aee;
   font-size: x-small;
 }
 .message {
@@ -119,8 +120,12 @@ main {
   cursor: pointer;
 }
 
+.close-button.close-button-info {
+  color: #000;
+}
+
 .control-container {
-  background-color: #8a8991e6;
+  background-color: #960aee;
   padding: 10px;
   border-radius: 50%;
   display: flex;
@@ -134,13 +139,16 @@ main {
   border-radius: 20%;
 }
 
-#leave-btn img {
+#leave-btn span {
   width: 30px;
 }
 
-.control-container img {
+.control-container span {
   height: 20px;
   width: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #controls {
@@ -153,10 +161,90 @@ main {
   justify-content: center;
   margin: 20px;
 }
+
+/*Info section*/
+.info-section.show {
+  position: fixed;
+  bottom: 10%;
+  width: 300px;
+  height: 28%;
+  background-color: #fff;
+  box-shadow: -1px 0px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+  z-index: 30;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  right: 20px;
+  transform: translateY(0%);
+  padding: 10px;
+}
+
+.info-section.hide {
+  position: fixed;
+  bottom: 10%;
+  width: 300px;
+  height: 28%;
+  background-color: #fff;
+  box-shadow: -1px 0px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  z-index: 30;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  right: 20px;
+  transform: translateY(200%);
+  padding: 10px;
+}
+
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  padding-left: 0;
+}
+
+.information {
+  display: flex;
+  flex-direction: column;
+  font-size: small;
+}
+
+.copy-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #960aee;
+  border-radius: 3px;
+  margin: 20px 0;
+}
+
+.copy-main .copy-text {
+  font-size: x-small;
+  color: #fff;
+}
+
+.copy-button {
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.info-button {
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 20px;
+  right: 40px;
+  cursor: pointer;
+  color: #960aee;
+}
+
 /* Flash message section*/
 .flash-message {
   position: fixed;
-  bottom: 20px; /* Adjust the distance from the bottom as needed */
+  bottom: 20px;
   left: 15%;
   transform: translateX(-50%);
   opacity: 0;
@@ -169,8 +257,11 @@ main {
 }
 
 @media (max-width: 750px) {
+  main {
+    width: 90%;
+  }
   #local-video {
-    width: 50%;
+    width: 60%;
   }
 
   .flash-message {
