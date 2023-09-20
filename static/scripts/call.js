@@ -14,6 +14,10 @@ const infoSection = document.getElementById('info-section');
 audioToggle.addEventListener('click', toggleAudio);
 videoToggle.addEventListener('click', toggleVideo);
 
+// Audio/video constraints
+constraints.audio = constraints.audio === 'True' ? true : false;
+constraints.video = constraints.video === 'True' ? true : false;
+
 //function to mute/unmute audio
 function toggleAudio(e) {
   const audioTracks = localStream.getAudioTracks();
