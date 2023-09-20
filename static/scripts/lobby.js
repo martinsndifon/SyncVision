@@ -1,59 +1,86 @@
 let localStream;
 
+const mic = document.getElementById('mic-btn');
+const camera = document.getElementById('camera-btn');
 const audioMute = document.getElementById('audio_mute');
 const videoDisable = document.getElementById('video_disable');
 const submit = document.getElementById('submit-btn');
 const form = document.getElementById('form');
+const input = document.getElementById('userName');
+
+
+submit.addEventListener('click', (e) => {
+  form.submit();
+  form.reset();
+})
+
 
 let init = async () => {
-  localStream = await navigator.mediaDevices.getUserMedia({
+  await navigator.mediaDevices.getUserMedia({
     video: true,
     audio: true,
-  });
-  document.getElementById("localVideo").srcObject = localStream;
+  }).then((stream) => {
+    localStream = stream;
+    document.getElementById("localVideo").srcObject = localStream;
+  })
 };
 
-let toogleCamera = async () => {
-  let videoTrack = localStream
-    .getTracks()
-    .find((track) => track.kind === "video");
 
-  if (videoTrack.enabled) {
-    videoTrack.enabled = false;
-    videoDisable.checked = true;
-    document.getElementById("camera-btn").style.backgroundColor = "#f85858";
-  } else {
-    videoTrack.enabled = true;
+const toggleCamera = async (e) => {
+  let target = e.target;
+  if (target.tagName != 'BUTTON') {
+    target = target.closest('BUTTON');
+  }
+  if (videoDisable.checked) {
     videoDisable.checked = false;
-    document.getElementById("camera-btn").style.backgroundColor = "#b366f9";
-  }
-};
-
-let toogleMic = async () => {
-  let audioTrack = localStream
-    .getTracks()
-    .find((track) => track.kind === "audio");
-
-  if (audioTrack.enabled) {
-    audioTrack.enabled = false;
-    audioMute.checked = true;
-    document.getElementById("mic-btn").style.backgroundColor = "#f85858";
   } else {
-    audioTrack.enabled = true;
-    audioTrack.enabled = false;
-    audioMute.checked = false;
-    document.getElementById("mic-btn").style.backgroundColor = "#b366f9";
+    videoDisable.checked = true;
+  }
+  const videoTracks = localStream.getVideoTracks();
+  videoTracks.forEach((track) => track.enabled = !videoDisable.checked);
+  if (target.classList.contains('enable_color')) {
+    target.classList.remove('enable_color')
+  } else {
+    target.classList.add('enable_color');
+  }
+  if (target.children[0].innerText == 'videocam') {
+    target.children[0].innerText = 'videocam_off';
+  } else {
+    target.children[0].innerText = 'videocam';
   }
 };
 
-document.getElementById("camera-btn").addEventListener("click", toogleCamera);
-document.getElementById("mic-btn").addEventListener("click", toogleMic);
+const toggleMic = async (e) => {
+  let target = e.target;
+  if (target.tagName != 'BUTTON') {
+    target = target.closest('BUTTON');
+  }
+  if (audioMute.checked) {
+    audioMute.checked = false;
+  } else {
+    audioMute.checked = true;
+  }
+  const audioTracks = localStream.getAudioTracks();
+  audioTracks.forEach((track) => track.enabled = !audioMute.checked);
+  if (target.classList.contains('enable_color')) {
+    target.classList.remove('enable_color')
+  } else {
+    target.classList.add('enable_color');
+  }
+  if (target.children[0].innerText == 'mic') {
+    target.children[0].innerText = 'mic_off';
+  } else {
+    target.children[0].innerText = 'mic';
+  }
+}
+
+camera.addEventListener("click", toggleCamera);
+mic.addEventListener("click", toggleMic);
 init();
 
 const nameInput = document.getElementById("userName");
 
 nameInput.addEventListener("input", handleInput);
-form.addEventListener('submit', handleSubmit)
 
 function handleInput(e) {
   const target = e.target;
