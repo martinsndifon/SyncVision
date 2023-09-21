@@ -60,12 +60,6 @@ form {
     display: inline-block;
 }
 
-
-
-.action_input {
-    padding-left: 2.5rem;
-}
-
 .submit {
     border: none;
     font-weight: bold;
@@ -102,19 +96,13 @@ footer a {
         margin-block-end: 3rem;
     }
     
-    .action_link {
-        font-size: 1.8rem;
-    }
-    
     form {
         margin-block-end: 2.5rem;
     }
     
-    .action_input, .submit {
+    .action_input, .submit, .action_link {
         font-size: 1.8rem;
     }
-    
-
     
     footer, footer a{
         font-size: 1.5rem;
@@ -134,15 +122,11 @@ footer a {
         margin-block-end: 3.5rem;
     }
     
-    .action_link {
-        font-size: 2rem;
-    }
-    
     form {
         margin-block-end: 3rem;
     }
     
-    .action_input, .submit {
+    .action_input, .submit, .action_link {
         font-size: 2rem;
     }
     
@@ -224,12 +208,8 @@ footer a {
         margin-block-end: 2rem;
     }
 
-    .action_link {
-        font-size: 1.3rem;
-    }
-
-    .action_input, .submit {
-        font-size: 1.3rem;
+    .action_input, .submit, .action_link {
+        font-size: 1rem;
     }
 
     .action {
