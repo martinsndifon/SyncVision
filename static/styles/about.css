@@ -3,6 +3,14 @@ section + section {
     margin-bottom: 1.5rem;
 }
 
+section.project_about {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
 article + article {
     margin-top: 1.5rem;
 }
@@ -29,7 +37,7 @@ p + p {
 }
 
 ul {
-    margin: 1rem 0 1rem 1rem;
+    margin: 1rem 0 1rem 0;
     font-family: 'Raleway', sans-serif;
 }
 
@@ -86,7 +94,16 @@ img.icon {
     text-align: center;
 }
 
+p + h3 {
+    margin-top: 2rem;
+}
+
 @media (min-width: 500px) {
+    section.project_about {
+        display: flex;
+        flex-direction: column;
+        text-align: justify;
+    }
 
     p {
         max-width: 550px;
