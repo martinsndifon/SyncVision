@@ -3,6 +3,7 @@
 from flask import Flask, session, request
 from views import app_views
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
+from shared_data import room_users
 
 
 app = Flask(__name__)
@@ -17,7 +18,7 @@ def handle_my_custom_event(data):
 
 
 # Track connected users in each room
-room_users = {}
+# room_users = {}
 clients = {}
 
 
@@ -28,6 +29,7 @@ def on_join(data):
     join_room(room)
     if room not in room_users:
         room_users[room] = []
+    print(room_users)
     room_users[room].append(userId)
 
     if room not in clients:
@@ -54,6 +56,8 @@ def on_leave(data):
     if userId in clients[room]:
         del clients[room][userId]
     leave_room(room)
+    if session.get('host'):
+        del session['host']
     data = {'userId': userId, 'type': 'leave'}
     send(data, to=room)
 
@@ -78,6 +82,26 @@ def transfer_data(message):
     print('DataEvent: {} is sending the data:\n {}\n to {}'.format(
         user_id, data, peer_user_id))
     emit('data', data, to=peer_to_send)
+
+
+@socketio.on('checkId')
+def check_roomId(data):
+    roomId = data['roomId']
+    if roomId not in room_users:
+        data = {'result': 'False'}
+    else:
+        data = {'result': 'True'}
+    emit('status', data, to=request.sid)  # type: ignore
+
+
+@socketio.on('check-capacity')
+def check_max_capacity(data):
+    roomId = data['roomId']
+    if len(room_users[roomId]) == 2:
+        data = {'result': 'True'}
+    else:
+        data = {'result': 'False'}
+    emit('capacity', data, to=request.sid)  # type: ignore
 
 
 @socketio.on_error_default

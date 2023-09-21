@@ -1,11 +1,28 @@
 #!/usr/bin/python3
 """Call module"""
-from flask import render_template, g, redirect, url_for, session, request, jsonify
+from flask import render_template, redirect, url_for, session, request
 from views import app_views
 from uuid import uuid4
+# from app import check_room_capacity, check_room_existence
+from shared_data import room_users
 
 
-@app_views.route('/call', methods=['GET', 'POST'], strict_slashes=False)
+def check_room_existence(roomId):
+    # Check if the room exists
+    if roomId not in room_users:
+        print(room_users, roomId)
+        return False
+    return True
+
+
+def check_room_capacity(roomId):
+    # Check if the room is not at maximum capacity
+    if len(room_users[roomId]) == 6:
+        return True
+    return False
+
+
+@app_views.route('/call', methods=['POST'], strict_slashes=False)
 def callHandler():
     """Handles the call route"""
     # session['userId'] = str(uuid4())
@@ -19,7 +36,7 @@ def callHandler():
         return redirect(url_for('app_views.home'))
     elif userId and not username:
         return redirect(url_for('app_views.lobby'))
-    
+
     if mute_audio == 'on':
         constraints['audio'] = False
     else:
@@ -46,17 +63,23 @@ def callHandler():
         session['username'] = username
         session['userId'] = str(uuid4())
         room_id = str(uuid4())
+        session['host'] = True
         return redirect(url_for('app_views.routeRoom', roomId=room_id))
-
-
-            
-
 
 
 @app_views.route('/call/<roomId>', strict_slashes=False)
 def routeRoom(roomId):
     """Routes to call html"""
-    # Retreives necessary session data
+    host = session.get('host')
+    if not host:
+        # check room existence
+        if not check_room_existence(roomId):
+            return redirect(url_for('app_views.home', existence_error='true'))
+
+            # Check if room is already at capacity
+        if check_room_capacity(roomId):
+            return redirect(url_for('app_views.home', capacity_error='true'))
+        # Retreives necessary session data
     userId = session.get('userId')
     constraints = session.get('constraints')
     username = session.get('username')
