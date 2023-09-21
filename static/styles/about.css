@@ -1,0 +1,121 @@
+section + section {
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+article + article {
+    margin-top: 1.5rem;
+}
+
+.proj_name {
+    color: #960aee;
+    font-weight: bold;
+    font-family: 'Teko', sans-serif;
+    font-size: 1.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+p + p {
+    margin: 1rem 0;
+}
+
+ul {
+    margin: 1rem 0 1rem 1rem;
+    font-family: 'Raleway', sans-serif;
+}
+
+.motiv {
+    margin-top: 1.5rem;
+}
+
+a.proj_name {
+    text-decoration: underline;
+}
+
+
+img {
+    width: 100%;
+    display: block;
+    width: 150px;
+    border-radius: 15px;
+    margin-bottom: .4rem;
+    margin: 0 auto;
+}
+
+.socials {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    justify-content: center;
+}
+
+img.icon {
+    width: 24px;
+    height: auto;
+    margin: 0;
+    display: inline-block;
+    border-radius: 0;
+}
+
+.info p{
+    font-size: .8rem;
+    margin: 0;
+    text-align: center;
+}
+
+.info p + p {
+    margin-bottom: 0rem;
+}
+
+.info .name {
+    font-weight: bold;
+    margin-top: .5rem;
+    font-size: .9rem;
+}
+
+.about_eng {
+    text-align: center;
+}
+
+@media (min-width: 500px) {
+    
+    .engineers {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+    article + article {
+        margin: 0;
+    }
+}
+
+@media (min-width: 768px) {
+    .engineers {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    article + article {
+        margin: 0;
+    }
+
+    .info .name {
+        font-size: 1.3rem;
+    }
+
+    .info p {
+        font-size: 1rem;
+    }
+
+}
