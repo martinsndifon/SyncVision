@@ -56,10 +56,6 @@ form {
   display: inline-block;
 }
 
-.action_input {
-  padding-left: 2.5rem;
-}
-
 .submit {
   border: none;
   font-weight: bold;
@@ -95,23 +91,30 @@ footer a {
     margin-block-end: 3rem;
   }
 
-  .action_link {
-    font-size: 1.8rem;
-  }
+@media(min-width: 768px) {
+    h1 {
+        font-size: 3.5rem;
+        margin-block: 2.5rem;
+    }
 
-  form {
-    margin-block-end: 2.5rem;
-  }
+    .info_text {
+        font-size: 1.8rem;
+        margin-block-end: 3rem;
+    }
+    
+    form {
+        margin-block-end: 2.5rem;
+    }
+    
+    .action_input, .submit, .action_link {
+        font-size: 1.8rem;
+    }
+    
+    footer, footer a{
+        font-size: 1.5rem;
+    }
+    
 
-  .action_input,
-  .submit {
-    font-size: 1.8rem;
-  }
-
-  footer,
-  footer a {
-    font-size: 1.5rem;
-  }
 }
 
 @media (min-width: 1024px) {
@@ -138,10 +141,30 @@ footer a {
     font-size: 2rem;
   }
 
-  footer,
-  footer a {
-    font-size: 1.8rem;
-  }
+@media(min-width: 1024px) {
+    h1 {
+        font-size: 4rem;
+        margin-block: 3rem;
+    }
+
+    .info_text {
+        font-size: 2rem;
+        margin-block-end: 3.5rem;
+    }
+    
+    form {
+        margin-block-end: 3rem;
+    }
+    
+    .action_input, .submit, .action_link {
+        font-size: 2rem;
+    }
+    
+
+    
+    footer, footer a{
+        font-size: 1.8rem;
+    }
 }
 
 /* Aside */
@@ -172,79 +195,74 @@ footer a {
 
 /* Media query for screen sizes >= 1280px */
 @media (min-width: 1280px) {
-  header {
-    margin-bottom: 2rem;
-  }
+    header {
+        margin-bottom: 2rem;
+    }
 
-  .content {
-    display: flex;
-    align-items: center;
-    width: 90%;
-    margin: 0 auto;
-    justify-content: space-between;
-  }
 
-  main {
-    width: 55%;
-  }
+    .content {
+        display: flex;
+        align-items: center;
+        width: 90%;
+        margin: 0 auto;
+        justify-content: space-between;
+    }    
 
-  main .container {
-    width: 100%;
-  }
+    main {
+        width: 55%;
+    }
 
-  aside {
-    width: 35%;
-  }
+    main .container {
+        width: 100%;
+    }
 
-  aside .container {
-    width: 100%;
-  }
+    aside {
+        width: 35%;
+    }
 
-  h1 {
-    margin-block: 1.5rem;
-    font-size: 2.8rem;
-  }
+    aside .container {
+        width: 100%;
+    }
 
-  .info_text {
-    font-size: 1.3rem;
-    margin-block-end: 2rem;
-  }
+    h1 {
+        margin-block: 1.5rem;
+        font-size: 2.8rem;
+    }
 
-  .action_link {
-    font-size: 1.3rem;
-  }
+    .info_text {
+        font-size: 1.3rem;
+        margin-block-end: 2rem;
+    }
 
-  .action_input,
-  .submit {
-    font-size: 1.3rem;
-  }
+    .action_input, .submit, .action_link {
+        font-size: 1rem;
+    }
 
-  .action {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
+    .action {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
 
-  .action_link {
-    margin-block-end: 0rem;
-  }
+    .action_link {
+        margin-block-end: 0rem;
+    }
 
-  form {
-    margin-bottom: 0rem;
-  }
+    form {
+        margin-bottom: 0rem;
+    }
 
-  footer {
-    position: static;
-  }
-  footer,
-  footer a {
-    font-size: 1.3rem;
-  }
+    footer {
+        position: static;
+    }
+    footer, footer a {
+        font-size: 1.3rem;
+    }
 
-  .aside_info {
-    font-size: 1.2rem;
-  }
+    .aside_info {
+        font-size: 1.2rem;
+    }
 }
 
 .flash-message {
