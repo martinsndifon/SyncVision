@@ -169,6 +169,32 @@ const startConnection = async () => {
       console.log('Got the local stream');
       // The local Stream should be here, when the user gets a stream from his own devices, not when a peerConnection is created. This gives me the opportunity to work with it regardless of the connection status.
       localStream = stream;
+      const audioTracks = localStream.getAudioTracks();
+      const videoTracks = localStream.getVideoTracks()
+      audioTracks.forEach((track) => {
+        track.enabled = constraints.audio;
+        if (track.enabled) {
+          // styling
+          audioToggle.children[0].innerText = 'mic';
+          audioToggle.style.backgroundColor = '#960aee';
+        } else {
+          // add styling
+          audioToggle.style.backgroundColor = '#ed2939';
+          audioToggle.children[0].innerText = 'mic_off';
+        }
+      });
+      videoTracks.forEach((track) => {
+        track.enabled = constraints.video;
+        if (track.enabled) {
+          // styling
+          videoToggle.style.backgroundColor = '#960aee';
+          videoToggle.children[0].innerText = 'videocam';
+        } else {
+          // add styling
+          videoToggle.style.backgroundColor = '#ed2939';
+          videoToggle.children[0].innerText = 'videocam_off';
+        }
+      })
       localVideo.srcObject = stream;
       localVideo.muted = true;
       socket.connect();
