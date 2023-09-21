@@ -87,6 +87,10 @@ img.icon {
 }
 
 @media (min-width: 500px) {
+
+    p {
+        max-width: 550px;
+    }
     
     .engineers {
         display: flex;
