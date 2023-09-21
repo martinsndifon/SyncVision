@@ -27,13 +27,12 @@ joinMeeting.addEventListener('click', (event) => {
           } else {
             const route = `/call/${id}`;
             form.action = route;
-            console.log(form.action);
             form.submit();
             form.reset();
           }
         });
       } else {
-        flashMessage('The meeting you attempted joining may have ended');
+        flashMessage('The meeting may have ended or does not exist');
       }
     });
   }
@@ -53,7 +52,7 @@ function flashMessage(message) {
 const urlParams = new URLSearchParams(window.location.search);
 
 if (urlParams.has('existence_error')) {
-  flashMessage('The meeting you attempted joining may have ended');
+  flashMessage('The meeting may have ended or does not exist');
 } else if (urlParams.has('capacity_error')) {
   flashMessage('The meeting is already at max capacity');
 }

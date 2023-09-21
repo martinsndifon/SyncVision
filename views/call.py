@@ -3,12 +3,11 @@
 from flask import render_template, redirect, url_for, session, request
 from views import app_views
 from uuid import uuid4
-# from app import check_room_capacity, check_room_existence
 from shared_data import room_users
 
 
 def check_room_existence(roomId):
-    # Check if the room exists
+    """Check if the room exists"""
     if roomId not in room_users:
         print(room_users, roomId)
         return False
@@ -16,7 +15,7 @@ def check_room_existence(roomId):
 
 
 def check_room_capacity(roomId):
-    # Check if the room is not at maximum capacity
+    """Check if the room is not at maximum capacity"""
     if len(room_users[roomId]) == 6:
         return True
     return False
@@ -25,7 +24,6 @@ def check_room_capacity(roomId):
 @app_views.route('/call', methods=['POST'], strict_slashes=False)
 def callHandler():
     """Handles the call route"""
-    # session['userId'] = str(uuid4())
     room_id = request.args.get('roomId', False)
     username = request.form.get('username')
     mute_audio = request.form.get('mute_audio')
@@ -54,12 +52,12 @@ def callHandler():
         if session.get('userId') and session.get('username'):
             return redirect(url_for('app_views.routeRoom', roomId=room_id))
         else:
-            # Creates the re
+            # Creates the session for the user
             session['username'] = username
             session['userId'] = str(uuid4())
             return redirect(url_for('app_views.routeRoom', roomId=room_id))
     else:
-        # For Initial creating room/meeting
+        # For Initial creation of room/meeting
         session['username'] = username
         session['userId'] = str(uuid4())
         room_id = str(uuid4())

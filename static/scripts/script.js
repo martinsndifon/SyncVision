@@ -5,7 +5,6 @@ inputElement.addEventListener("blur", myFunctionBlur);
 
 function myFunctionFocus() {
   // Code to execute when the input gains focus
-  console.log("Input gained focus");
   const submitButton = document.getElementById("join-btn");
   submitButton.classList.remove("inactive");
   submitButton.classList.add("active");
@@ -14,7 +13,6 @@ function myFunctionFocus() {
 
 function myFunctionBlur() {
   // Code to execute when the input loses focus
-  console.log("Input lost focus");
   const submitButton = document.getElementById("join-btn");
   submitButton.classList.remove("active");
   submitButton.classList.add("inactive");
