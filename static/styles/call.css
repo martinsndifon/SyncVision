@@ -86,7 +86,7 @@ main {
 
 .chat-input input {
   padding: 12px;
-  border: none;
+  border: 1px solid #960aee;
   border-radius: 5px 0 0 5px;
   margin: 0;
   width: 300px;
@@ -95,7 +95,7 @@ main {
 .chat-input button {
   background-color: #960aee;
   color: #fff;
-  border: none;
+  border: 1px solid #960aee;
   border-radius: 0 5px 5px 0;
   padding: 5px 10px;
   cursor: pointer;
@@ -105,7 +105,7 @@ main {
 .message-header {
   margin-bottom: 0;
   color: #960aee;
-  font-size: x-small;
+  font-size: small;
 }
 .message {
   margin-top: 0;
@@ -253,6 +253,15 @@ main {
 }
 
 .flash-message.show {
+  opacity: 1;
+}
+
+.flash-message.error {
+  color: #fff;
+  background-color: rgb(211, 2, 2);
+  padding: 10px;
+  border-radius: 5px;
+  margin-left: 5px;
   opacity: 1;
 }
 

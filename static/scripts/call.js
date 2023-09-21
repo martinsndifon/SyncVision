@@ -57,7 +57,7 @@ const connectedPeers = {};
 const sendMessage = () => {
   const message = messageInput.value.trim();
   if (message !== '') {
-    socket.emit('chat', { from: userId, message, type: 'chat', to: roomId });
+    socket.emit('chat', { from: username, message, type: 'chat', to: roomId });
     messageInput.value = '';
   }
 };
@@ -72,7 +72,7 @@ messageInput.addEventListener('keydown', (e) => {
 
 // Function to emit the 'leave' event
 const emitLeaveEvent = async () => {
-  socket.emit('leave', { userId: userId, room: roomId });
+  socket.emit('leave', { userId: userId, room: roomId, username: username });
 };
 
 endCall.addEventListener('click', async () => {
@@ -86,7 +86,7 @@ window.addEventListener('beforeunload', emitLeaveEvent);
 window.addEventListener('unload', emitLeaveEvent);
 
 socket.on('connect', function () {
-  socket.emit('my event', { data: "I'm connected!" });
+  socket.emit('connected', { data: 'Connected so signalling server!' });
 });
 
 socket.on('message', (message) => {
@@ -104,8 +104,8 @@ socket.on('message', (message) => {
     div.appendChild(p);
     messageBox.append(div);
   } else if (message.type == 'join') {
-    const joinedUserId = message.userId;
-    flashMessage(`${joinedUserId} joined`);
+    const joinedUsername = message.username;
+    flashMessage(`${joinedUsername} joined`);
   } else {
     // On 'leave', remove the user video element and their connection object
     const peerUserId = message.userId;
@@ -120,18 +120,28 @@ socket.on('message', (message) => {
       infoSection.classList.remove('hide');
       infoSection.classList.add('show');
     }
-    flashMessage(`${message.userId} left`);
+    flashMessage(`${message.username} left`);
   }
 });
 
-function flashMessage(message) {
-  const flashMessage = document.getElementById('flash-message');
-  flashMessage.textContent = message;
-  flashMessage.classList.add('show');
+function flashMessage(message, type = 'error') {
+  if (type) {
+    const flashMessage = document.getElementById('flash-message');
+    flashMessage.textContent = message;
+    flashMessage.classList.add('error');
 
-  setTimeout(() => {
-    flashMessage.classList.remove('show');
-  }, 1000);
+    setTimeout(() => {
+      flashMessage.classList.remove('error');
+    }, 5000);
+  } else {
+    const flashMessage = document.getElementById('flash-message');
+    flashMessage.textContent = message;
+    flashMessage.classList.add('show');
+
+    setTimeout(() => {
+      flashMessage.classList.remove('show');
+    }, 1000);
+  }
 }
 
 // New code to try webRTC connection
@@ -166,11 +176,9 @@ const startConnection = async () => {
   await navigator.mediaDevices
     .getUserMedia({ audio: true, video: true })
     .then((stream) => {
-      console.log('Got the local stream');
-      // The local Stream should be here, when the user gets a stream from his own devices, not when a peerConnection is created. This gives me the opportunity to work with it regardless of the connection status.
       localStream = stream;
       const audioTracks = localStream.getAudioTracks();
-      const videoTracks = localStream.getVideoTracks()
+      const videoTracks = localStream.getVideoTracks();
       audioTracks.forEach((track) => {
         track.enabled = constraints.audio;
         if (track.enabled) {
@@ -194,21 +202,20 @@ const startConnection = async () => {
           videoToggle.style.backgroundColor = '#ed2939';
           videoToggle.children[0].innerText = 'videocam_off';
         }
-      })
+      });
       localVideo.srcObject = stream;
       localVideo.muted = true;
       socket.connect();
       socket.emit('join', { room: roomId });
     })
-    .catch((error) => {
-      console.log('Could not get local stream: ', error);
+    .catch(() => {
+      flashMessage('Give permission to media devices', 'error');
     });
 };
 
 // send IceCandidates
 const onIceCandidate = async (event, peerUserId) => {
   if (event.candidate) {
-    console.log('Sending ICE candidate');
     await sendData(peerUserId, {
       type: 'candidate',
       candidate: event.candidate,
@@ -238,7 +245,6 @@ window.addEventListener('resize', orderVideos);
 
 // Set the srcObject of the remote video element’s reference to the first stream in the track
 const onTrack = (event, peerUserId) => {
-  console.log('Adding remote track for user: ' + peerUserId);
   let remoteVideo = document.getElementById(`remoteVideo_${peerUserId}`);
   if (!remoteVideo) {
     // create video element for the peer
@@ -273,14 +279,13 @@ const createPeerConnection = async (peerUserId) => {
     });
     pc.onicecandidate = (event) => onIceCandidate(event, peerUserId);
     pc.ontrack = (event) => onTrack(event, peerUserId);
-    // localStream = localVideo.srcObject;
     for (const track of localStream.getTracks()) {
       pc.addTrack(track, localStream);
     }
-    console.log('PeerConnection created');
+    // console.log('PeerConnection created');
     return pc;
   } catch (error) {
-    console.error('PeerConnection failed: ', error);
+    // console.error('PeerConnection failed: ', error);
     return null;
   }
 };
@@ -292,16 +297,15 @@ const setAndSendLocalDescription = (peerUserId, sessionDescription) => {
     peerConnection
       .setLocalDescription(sessionDescription)
       .then(async () => {
-        console.log('Local description set');
         await sendData(peerUserId, sessionDescription);
       })
       .catch((error) => {
-        console.error(
-          `Error setting local description for ${peerUserId}: ${error}`
-        );
+        // console.error(
+        //   `Error setting local description for ${peerUserId}: ${error}`
+        // );
       });
   } else {
-    console.error(`PeerConnection for ${peerUserId} not found`);
+    // console.error(`PeerConnection for ${peerUserId} not found`);
   }
 };
 
@@ -311,19 +315,17 @@ const sendOffer = async (peerUserId) => {
   const PeerConnection = await createPeerConnection(peerUserId);
   connectedPeers[peerUserId] = PeerConnection;
   // Create and send offer
-  console.log('Sending offer to user: ', peerUserId);
   await PeerConnection.createOffer()
     .then((sessionDescription) => {
       setAndSendLocalDescription(peerUserId, sessionDescription);
     })
     .catch((error) => {
-      console.error(`Send offer failed to ${peerUserId}: ${error}`);
+      // console.error(`Send offer failed to ${peerUserId}: ${error}`);
     });
 };
 
 // Answer an offer from a peer setting local description
 const sendAnswer = async (peerUserId, offer) => {
-  console.log(`Sending answer to ${peerUserId}`);
   // Create an RTCPeerConnection for the peer
   const peerConnection = await createPeerConnection(peerUserId);
   connectedPeers[peerUserId] = peerConnection;
@@ -336,7 +338,7 @@ const sendAnswer = async (peerUserId, offer) => {
       setAndSendLocalDescription(peerUserId, sessionDescription);
     })
     .catch((error) => {
-      console.error(`Send answer failed to ${peerUserId}: ${error}`);
+      // console.error(`Send answer failed to ${peerUserId}: ${error}`);
     });
 };
 
@@ -361,10 +363,10 @@ const signalingDataHandler = async (data) => {
         );
       }
     } catch (error) {
-      console.error(`Error adding ICE candidate for ${peerUserId}: ${error}`);
+      // console.error(`Error adding ICE candidate for ${peerUserId}: ${error}`);
     }
   } else {
-    console.log('Unknown Data');
+    // console.log('Unknown Data');
   }
 };
 
@@ -387,13 +389,11 @@ async function hangup() {
 
 // creates a peer connection and send and offer to the peer, fires when a new peer joins another peer in a room
 socket.on('ready', async (peerUserId) => {
-  console.log('Connecting to user: ', peerUserId);
   await sendOffer(peerUserId);
 });
 
 // Receive the data from the server and pass it to the signalingDataHandler() to take appropriate action
 socket.on('data', async (data) => {
-  console.log('Data received: ', data);
   await signalingDataHandler(data);
 });
 
