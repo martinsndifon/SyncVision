@@ -1,11 +1,10 @@
 video {
   width: 100%;
-  /* border-radius: 4px; */
 }
 
 .video {
   margin-bottom: 1rem;
-  /* border: 1px solid #960aee; */
+  border: 1px solid #960aee;
 }
 
 button {
@@ -72,6 +71,7 @@ h2 {
   background-color: #960aee;
   padding: 1rem 1.3rem;
   font-size: 1.3rem;
+  transition: .5s ease-in;
 }
 
 .inactive {
