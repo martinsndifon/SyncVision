@@ -1,5 +1,12 @@
+/* font */
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+
 .material-symbols-outlined {
   color: #fff;
+}
+
+main * {
+  font-family: 'Raleway', sans-serif;
 }
 
 main {
