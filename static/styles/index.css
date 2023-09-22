@@ -63,6 +63,12 @@ form {
   cursor: pointer;
 }
 
+.join_active {
+  color: #fff;
+  background-color: #960aee;
+  transition: .5s ease-in;
+}
+
 @media (max-width: 379px) {
   .submit {
     margin-top: 0.5rem;
@@ -80,7 +86,8 @@ footer a {
   color: #960aee;
 }
 
-@media (min-width: 768px) {
+
+@media(min-width: 768px) {
   h1 {
     font-size: 3.5rem;
     margin-block: 2.5rem;
@@ -90,35 +97,22 @@ footer a {
     font-size: 1.8rem;
     margin-block-end: 3rem;
   }
-
-@media(min-width: 768px) {
-    h1 {
-        font-size: 3.5rem;
-        margin-block: 2.5rem;
-    }
-
-    .info_text {
-        font-size: 1.8rem;
-        margin-block-end: 3rem;
-    }
-    
-    form {
-        margin-block-end: 2.5rem;
-    }
-    
-    .action_input, .submit, .action_link {
-        font-size: 1.8rem;
-    }
-    
-    footer, footer a{
-        font-size: 1.5rem;
-    }
-    
-
+  
+  form {
+    margin-block-end: 2.5rem;
+  }
+  
+  .action_input, .submit, .action_link {
+    font-size: 1.8rem;
+  }
+  
+  footer, footer a{
+    font-size: 1.5rem;
+  }
 }
 
-@media (min-width: 1024px) {
-  h1 {
+@media(min-width: 1024px) {
+    h1 {
     font-size: 4rem;
     margin-block: 3rem;
   }
@@ -127,44 +121,20 @@ footer a {
     font-size: 2rem;
     margin-block-end: 3.5rem;
   }
-
-  .action_link {
-    font-size: 2rem;
-  }
-
+  
   form {
     margin-block-end: 3rem;
   }
-
-  .action_input,
-  .submit {
+  
+  .action_input, .submit, .action_link {
     font-size: 2rem;
   }
+  
 
-@media(min-width: 1024px) {
-    h1 {
-        font-size: 4rem;
-        margin-block: 3rem;
-    }
-
-    .info_text {
-        font-size: 2rem;
-        margin-block-end: 3.5rem;
-    }
-    
-    form {
-        margin-block-end: 3rem;
-    }
-    
-    .action_input, .submit, .action_link {
-        font-size: 2rem;
-    }
-    
-
-    
-    footer, footer a{
-        font-size: 1.8rem;
-    }
+  
+  footer, footer a{
+    font-size: 1.8rem;
+  }
 }
 
 /* Aside */
@@ -195,74 +165,74 @@ footer a {
 
 /* Media query for screen sizes >= 1280px */
 @media (min-width: 1280px) {
-    header {
-        margin-bottom: 2rem;
-    }
+  header {
+    margin-bottom: 2rem;
+  }
 
 
-    .content {
-        display: flex;
-        align-items: center;
-        width: 90%;
-        margin: 0 auto;
-        justify-content: space-between;
-    }    
+  .content {
+    display: flex;
+    align-items: center;
+    width: 90%;
+    margin: 0 auto;
+    justify-content: space-between;
+  }    
 
-    main {
-        width: 55%;
-    }
+  main {
+    width: 55%;
+  }
 
-    main .container {
-        width: 100%;
-    }
+  main .container {
+    width: 100%;
+  }
 
-    aside {
-        width: 35%;
-    }
+  aside {
+    width: 35%;
+  }
 
-    aside .container {
-        width: 100%;
-    }
+  aside .container {
+    width: 100%;
+  }
 
-    h1 {
-        margin-block: 1.5rem;
-        font-size: 2.8rem;
-    }
+  h1 {
+    margin-block: 1.5rem;
+    font-size: 2.8rem;
+  }
 
-    .info_text {
-        font-size: 1.3rem;
-        margin-block-end: 2rem;
-    }
+  .info_text {
+    font-size: 1.3rem;
+    margin-block-end: 2rem;
+  }
 
-    .action_input, .submit, .action_link {
-        font-size: 1rem;
-    }
+  .action_input, .submit, .action_link {
+    font-size: 1rem;
+  }
 
-    .action {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 1rem;
-    }
+  .action {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
 
-    .action_link {
-        margin-block-end: 0rem;
-    }
+  .action_link {
+    margin-block-end: 0rem;
+  }
 
-    form {
-        margin-bottom: 0rem;
-    }
+  form {
+    margin-bottom: 0rem;
+  }
 
-    footer {
-        position: static;
-    }
-    footer, footer a {
-        font-size: 1.3rem;
-    }
+  footer {
+    position: static;
+  }
+  footer, footer a {
+    font-size: 1.3rem;
+  }
 
-    .aside_info {
-        font-size: 1.2rem;
-    }
+  .aside_info {
+    font-size: 1.2rem;
+  }
 }
 
 .flash-message {
@@ -278,6 +248,8 @@ footer a {
   padding: 10px;
   border-radius: 5px;
   margin-left: 5px;
+  font-family: 'Raleway', sans-serif;
+  font-weight: bold;
 }
 
 .flash-message.show {
