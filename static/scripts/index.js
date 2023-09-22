@@ -6,6 +6,20 @@ const form = document.getElementById('form');
 
 const socket = io({ autoConnect: false });
 
+
+meetingLink.addEventListener('input', (e) => {
+  const target = e.target;
+  if (target.value.length >= 1) {
+    joinMeeting.disabled = false;
+    joinMeeting.ariaDisabled = false;
+    joinMeeting.classList.add('join_active');
+  } else {
+    joinMeeting.disabled = true;
+    joinMeeting.ariaDisabled = true;
+    joinMeeting.classList.remove('join_active');
+  }
+})
+
 joinMeeting.addEventListener('click', (event) => {
   // check the value if it is link or just ID and respond accordingly
   event.preventDefault();
