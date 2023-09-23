@@ -26,15 +26,8 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/static/images/favicon-16x16.png">
     <link rel="manifest" href="/static/images/site.webmanifest">
     <link rel="stylesheet" href="/static/styles/global.css" />
-    <link rel="stylesheet" href="/static/styles/index.css" />
-    <title>SyncVision | Home</title>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
-      integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
-      crossorigin="anonymous"
-      defer
-    ></script>
-    <script src="/static/scripts/index.js" defer></script>
+    <link rel="stylesheet" href="/static/styles/404.css" />
+    <title>SyncVision | 404 | Not Found</title>
   </head>
   <body>
     <header>
@@ -45,55 +38,11 @@
       </div>
     </header>
 
-    <div class="content">
-      <main>
+    <main>
         <div class="container">
-          <section class="info">
-            <h1>Express Video Meetings For Everyone</h1>
-
-            <p class="info_text">
-              Connecting with friends, family, and colleagues is just a click
-              away. Let's get you started and bring your conversations to life!
-            </p>
-          </section>
-          <section class="action">
-            <a href="/call/lobby" class="action_link">
-              <span class="material-symbols-outlined"> videocam </span> New
-              Meeting
-            </a>
-            <form id="form">
-              <input
-                id="meeting-link-box"
-                class="action_input"
-                type="text"
-                name="action_code"
-                placeholder="Enter a Code or link"
-                aria-placeholder="Enter a Code or link"
-              />
-              <button id="join-meeting" class="submit" aria-disabled disabled>
-                Join
-              </button>
-            </form>
-          </section>
-          <footer><a href="/about">Learn More</a> About Us</footer>
+            <h1>404</h1>
+            <p>The Page You Are Looking For, Can Not Be Found</p>
         </div>
-      </main>
-      <aside>
-        <div class="container">
-          <div class="aside_info_img">
-            <img
-              class="home_img"
-              src="/static/images/home300x300.jpg"
-              alt="A person in a conference call"
-            />
-          </div>
-          <p class="aside_info">
-            Connect via video and audio, facilitating virtual meetings,
-            conversations, and collaborations from anywhere with SyncVision
-          </p>
-        </div>
-      </aside>
-    </div>
-    <div id="flash-message" class="flash-message"></div>
+    </main>
   </body>
 </html>
