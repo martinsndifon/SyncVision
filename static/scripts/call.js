@@ -11,6 +11,9 @@ const videoToggle = document.getElementById('videotoggle');
 const placeholderText = document.getElementById('placeholder-text');
 const infoSection = document.getElementById('info-section');
 
+// 
+const notice = document.getElementById('notice');
+
 audioToggle.addEventListener('click', toggleAudio);
 videoToggle.addEventListener('click', toggleVideo);
 
@@ -78,7 +81,7 @@ const emitLeaveEvent = async () => {
 endCall.addEventListener('click', async () => {
   await emitLeaveEvent();
   await hangup();
-  window.location.href = 'http://127.0.0.1:5000/';
+  window.location.href = '/';
 });
 
 window.addEventListener('beforeunload', emitLeaveEvent);
@@ -92,6 +95,12 @@ socket.on('connect', function () {
 socket.on('message', (message) => {
   if (message.type == 'chat') {
     const from = message.from;
+    if (from != username) {
+      notice.classList.remove('no_show');
+    }
+    if (chatVisible) {
+      notice.classList.add('no_show');
+    }
     const m = message.message;
     const div = document.createElement('div');
     const header = document.createElement('h6');
@@ -103,6 +112,7 @@ socket.on('message', (message) => {
     div.appendChild(header);
     div.appendChild(p);
     messageBox.append(div);
+    messageBox.scrollTop = messageBox.scrollHeight - messageBox.clientHeight;
   } else if (message.type == 'join') {
     const joinedUsername = message.username;
     flashMessage(`${joinedUsername} joined`);

@@ -3,6 +3,21 @@
 
 .material-symbols-outlined {
   color: #fff;
+  /* z-index: 10; */
+}
+
+span.notice {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 100%;
+  background-color: #ed2939;
+  position: absolute;
+  right: -5px;
+  top: -5px;
+}
+
+span.notice.no_show {
+  visibility: hidden;
 }
 
 main * {
@@ -82,8 +97,10 @@ main {
 
 .chat-section #chat-messages {
   padding: 10px;
-  overflow-y: auto;
+  overflow-y: scroll;
   height: calc(100% - 100px);
+  scroll-behavior: smooth;
+  padding-bottom: 0;
 }
 
 .chat-section .chat-input {
@@ -139,6 +156,7 @@ main {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  position: relative;
 }
 
 #leave-btn {
@@ -285,3 +303,4 @@ main {
     left: 50%;
   }
 }
+

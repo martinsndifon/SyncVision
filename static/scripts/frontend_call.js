@@ -8,15 +8,23 @@ const copyButton = document.getElementById('copy-button');
 const closeInfoButton = document.getElementById('close-info-button');
 const infoSection = document.getElementById('info-section');
 const infoButton = document.getElementById('info-button');
+const notice = document.getElementById('notice');
+const messageBox = document.getElementById('chat-messages');
+const messageInput = document.getElementById('messageInput');
 
-let chatVisible = false;
+
 
 // Toggle chat section visibility
 chatButton.addEventListener('click', () => {
+  messageInput.focus();
+  messageBox.scrollTop = messageBox.scrollHeight - messageBox.clientHeight;
+  if (!chatVisible && !notice.classList.contains('no_show')) {
+    notice.classList.add('no_show');
+  }
   chatVisible = !chatVisible;
   chatSection.style.transform = chatVisible
-    ? 'translateX(0)'
-    : 'translateX(100%)';
+  ? 'translateX(0)'
+  : 'translateX(100%)';
   chatButton.style.backgroundColor = chatVisible ? '#a35bcf' : '#960aee';
 });
 
