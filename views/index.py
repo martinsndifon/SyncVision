@@ -1,8 +1,13 @@
 #!/usr/bin/python3
 """API status module"""
-from flask import render_template, request
+from flask import render_template, request, send_file
 from views import app_views
 
+# Serves the open graph image
+@app_views.route('/ogi.png')
+def serve_og_image():
+    image_data = open('static/images/ogi.png', 'rb')
+    return send_file(image_data, mimetype='image/png')
 
 @app_views.route('/', strict_slashes=False)
 def home():
