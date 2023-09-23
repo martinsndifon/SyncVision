@@ -140,3 +140,13 @@ p + h3 {
     }
 
 }
+
+footer {
+    margin-bottom: 1.5rem;
+}
+
+footer .container {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
