@@ -6,14 +6,15 @@
   /* z-index: 10; */
 }
 
-span.notice {
-  width: 1rem;
-  height: 1rem;
+.control-container span.notice {
+  width: .8rem;
+  height: .8rem;
   border-radius: 100%;
   background-color: #ed2939;
   position: absolute;
-  right: -5px;
-  top: -5px;
+  right: -2px;
+  top: -2px;
+  box-shadow: 1px 1px rgb(114, 111, 111);
 }
 
 span.notice.no_show {
@@ -192,7 +193,6 @@ main {
   position: fixed;
   bottom: 10%;
   width: 300px;
-  height: 28%;
   background-color: #fff;
   box-shadow: -1px 0px 10px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease;
@@ -302,5 +302,9 @@ main {
     bottom: 80px;
     left: 50%;
   }
+}
+
+video {
+  display: block;
 }
 

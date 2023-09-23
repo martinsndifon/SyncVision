@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """flask app init"""
-from flask import Flask, session, request
+from flask import Flask, session, request, render_template
 from views import app_views
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
 from shared_data import room_users
@@ -10,6 +10,13 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = '!syncvisionsecretkey!'
 socketio = SocketIO(app)
 app.register_blueprint(app_views)
+
+# handles 404 errors
+@app.errorhandler(404)
+def not_found(error):
+    """Serves the 404 page"""
+    return render_template('404.html');
+
 
 
 @socketio.on('connected')
