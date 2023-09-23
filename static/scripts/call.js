@@ -11,7 +11,7 @@ const videoToggle = document.getElementById('videotoggle');
 const placeholderText = document.getElementById('placeholder-text');
 const infoSection = document.getElementById('info-section');
 
-// 
+//
 const notice = document.getElementById('notice');
 
 audioToggle.addEventListener('click', toggleAudio);
@@ -114,8 +114,7 @@ socket.on('message', (message) => {
     messageBox.append(div);
     messageBox.scrollTop = messageBox.scrollHeight - messageBox.clientHeight;
   } else if (message.type == 'join') {
-    const joinedUsername = message.username;
-    flashMessage(`${joinedUsername} joined`);
+    flashMessage(`${message.username} joined`);
   } else {
     // On 'leave', remove the user video element and their connection object
     const peerUserId = message.userId;
@@ -134,7 +133,7 @@ socket.on('message', (message) => {
   }
 });
 
-function flashMessage(message, type = 'error') {
+function flashMessage(message, type) {
   if (type) {
     const flashMessage = document.getElementById('flash-message');
     flashMessage.textContent = message;

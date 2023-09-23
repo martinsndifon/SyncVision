@@ -7,8 +7,8 @@
 }
 
 .control-container span.notice {
-  width: .8rem;
-  height: .8rem;
+  width: 0.8rem;
+  height: 0.8rem;
   border-radius: 100%;
   background-color: #ed2939;
   position: absolute;
@@ -283,7 +283,7 @@ main {
 
 .flash-message.error {
   color: #fff;
-  background-color: rgb(211, 2, 2);
+  background-color: rgb(185, 1, 1);
   padding: 10px;
   border-radius: 5px;
   margin-left: 5px;
@@ -307,4 +307,3 @@ main {
 video {
   display: block;
 }
-

@@ -9,7 +9,6 @@ from shared_data import room_users
 def check_room_existence(roomId):
     """Check if the room exists"""
     if roomId not in room_users:
-        print(room_users, roomId)
         return False
     return True
 
@@ -69,7 +68,9 @@ def callHandler():
 def routeRoom(roomId):
     """Routes to call html"""
     host = session.get('host')
+    print(host)
     if not host:
+        print('host data persist', host)
         # check room existence
         if not check_room_existence(roomId):
             return redirect(url_for('app_views.home', existence_error='true'))

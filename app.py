@@ -11,17 +11,17 @@ app.config['SECRET_KEY'] = '!syncvisionsecretkey!'
 socketio = SocketIO(app)
 app.register_blueprint(app_views)
 
-# handles 404 errors
+
 @app.errorhandler(404)
 def not_found(error):
-    """Serves the 404 page"""
-    return render_template('404.html');
-
+    """Handle errors and serves the 404 page"""
+    return render_template('404.html')
 
 
 @socketio.on('connected')
 def handle_my_custom_event(data):
-    print('Received: ', data)
+    """Confirm socketio connection"""
+    print('Received ', data)
 
 
 # Store users request SIDs
@@ -66,10 +66,11 @@ def on_leave(data):
     if userId in clients[room]:
         del clients[room][userId]
     leave_room(room)
-    if session.get('host'):
-        del session['host']
+    if 'host' in session:
+        print('deleted session for the host user on leave')
+        session.pop('host', None)
     data = {'userId': userId, 'username': username, 'type': 'leave'}
-    send(data, to=room)
+    send(data, to=room, skip_sid=request.sid)
 
 
 @socketio.on('chat')
@@ -114,7 +115,7 @@ def check_roomId(data):
 def check_max_capacity(data):
     """Check if the room is already at maximum capacity"""
     roomId = data['roomId']
-    if len(room_users[roomId]) == 2:
+    if len(room_users[roomId]) == 6:
         data = {'result': 'True'}
     else:
         data = {'result': 'False'}
@@ -129,4 +130,4 @@ def default_error_handler(e):
 
 
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(app, debug=True)
