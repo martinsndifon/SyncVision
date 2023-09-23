@@ -22,6 +22,9 @@
       const userId = '{{ userId }}';
       const username = '{{ username }}';
       const constraints = {};
+      //check if chat is visible here and make the value available globally
+      //This makes the notification feature possible
+      let chatVisible = false;
       constraints.audio = '{{ constraints.audio }}';
       constraints.video = '{{ constraints.video }}';
     </script>
@@ -48,12 +51,14 @@
             <h3>Chat</h3>
             <button id="closeChatButton" class="close-button">&#10006;</button>
           </div>
-          <div id="chat-messages"></div>
+          <div id="chat-messages" class="chat-messages"></div>
           <div class="chat-input">
             <input
               type="text"
               id="messageInput"
               placeholder="Type your message..."
+              autofocus
+              autocomplete="name"
             />
             <button id="sendMessageButton" class="material-symbols-outlined">
               send
@@ -102,6 +107,7 @@
           class="control-container"
           id="chatButton"
         >
+          <span class="notice no_show" id="notice"></span>
           <span class="material-symbols-outlined"> chat </span>
         </button>
         <button type="button" class="control-container" id="leave-btn">
