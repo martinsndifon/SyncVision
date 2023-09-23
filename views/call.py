@@ -42,8 +42,7 @@ def callHandler():
         constraints['video'] = False
     else:
         constraints['video'] = True
-    print('*' * 50)
-    print('CONSTRAINTS', constraints)
+
     # Store media constraints from user
     session['constraints'] = constraints
     if room_id:
@@ -68,9 +67,7 @@ def callHandler():
 def routeRoom(roomId):
     """Routes to call html"""
     host = session.get('host')
-    print(host)
     if not host:
-        print('host data persist', host)
         # check room existence
         if not check_room_existence(roomId):
             return redirect(url_for('app_views.home', existence_error='true'))
@@ -85,5 +82,8 @@ def routeRoom(roomId):
     if not userId:
         # Redirect to Lobby with a query String containing roomId
         return redirect(url_for('app_views.lobby', roomId=roomId))
+    # Delete the host session data
+    if 'host' in session:
+        session.pop('host', None)
     # Renders the call Page
     return render_template('call.html', room_id=roomId, userId=userId, username=username, constraints=constraints)

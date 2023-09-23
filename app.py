@@ -61,16 +61,14 @@ def on_leave(data):
         room_users[room].remove(userId)
     # Delete room if no users are left inside
     if not room_users[room]:
+        print('deleting empty room')
         del room_users[room]
     # Delete the client's request SID
     if userId in clients[room]:
         del clients[room][userId]
     leave_room(room)
-    if 'host' in session:
-        print('deleted session for the host user on leave')
-        session.pop('host', None)
     data = {'userId': userId, 'username': username, 'type': 'leave'}
-    send(data, to=room, skip_sid=request.sid)
+    send(data, to=room, skip_sid=request.sid)  # type: ignore
 
 
 @socketio.on('chat')
