@@ -193,7 +193,6 @@ main {
   position: fixed;
   bottom: 10%;
   width: 300px;
-  height: 28%;
   background-color: #fff;
   box-shadow: -1px 0px 10px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease;
