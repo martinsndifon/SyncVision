@@ -27,6 +27,17 @@ def handle_my_custom_event(data):
 # Store users request SIDs
 clients = {}
 
+@socketio.on('callOptions')
+def handle_call_options_custom_event(data):
+    """Distributes the data to the room"""
+    if data.get('to'):
+        print('CallOptions sending to ============>')
+        print(data);
+        data['type'] = 'callOptions'
+        send(data, to=data['to'])
+    else:
+        data['from'] = request.sid
+        emit('callOptions', data, to=data['roomId'], skip_sid=request.sid)
 
 @socketio.on('join')
 def on_join(data):
