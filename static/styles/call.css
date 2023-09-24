@@ -1,6 +1,12 @@
 /* font */
 @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
 
+video {
+  transform: rotateY(180deg);
+  -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+  -moz-transform:rotateY(180deg); /* Firefox */
+}
+
 .material-symbols-outlined {
   color: #fff;
   /* z-index: 10; */
