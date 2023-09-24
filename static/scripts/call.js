@@ -1,7 +1,7 @@
 'use strict';
 
 const videoGrid = document.getElementById('remote-videos');
-const localVideoGrid = document.getElementById('local-video');
+const localVideoGrid = document.querySelector('.local_view_container');
 const messageBox = document.getElementById('chat-messages');
 const sendbutton = document.getElementById('sendMessageButton');
 const messageInput = document.getElementById('messageInput');
@@ -10,6 +10,7 @@ const audioToggle = document.getElementById('audiotoggle');
 const videoToggle = document.getElementById('videotoggle');
 const placeholderText = document.getElementById('placeholder-text');
 const infoSection = document.getElementById('info-section');
+const optionsDisplay = document.querySelector('.local_view_call_options_icon_container');
 
 //
 const notice = document.getElementById('notice');
@@ -27,11 +28,33 @@ function toggleAudio(e) {
   const defaultTrack = audioTracks[0];
   if (defaultTrack.enabled) {
     defaultTrack.enabled = false;
+
+    // Update constraints data
+    constraints.audio = false;
+
+    //visual notification that local audio is disabled
+    if(optionsDisplay.classList.contains('hide')) {
+      optionsDisplay.classList.remove('hide');
+      optionsDisplay.children[0].classList.remove('hide');
+    } else {
+      optionsDisplay.children[0].classList.remove('hide');
+    }
+
     // styling
     audioToggle.style.backgroundColor = '#ed2939';
     audioToggle.children[0].innerText = 'mic_off';
   } else {
     defaultTrack.enabled = true;
+
+    // updates constraints data
+    constraints.audio = true;
+
+    // visual notification that local audio is enabled
+    optionsDisplay.children[0].classList.add('hide');
+    if (optionsDisplay.children[1].classList.contains('hide')) {
+      optionsDisplay.classList.add('hide');
+    }
+
     // add styling
     audioToggle.style.backgroundColor = '#960aee';
     audioToggle.children[0].innerText = 'mic';
@@ -43,11 +66,33 @@ function toggleVideo(e) {
   const defaultTrack = videoTracks[0];
   if (defaultTrack.enabled) {
     defaultTrack.enabled = false;
+
+    // update constraints data
+    constraints.video = false;
+
+    //visual notification that local video is disabled
+    if(optionsDisplay.classList.contains('hide')) {
+      optionsDisplay.classList.remove('hide');
+      optionsDisplay.children[1].classList.remove('hide');
+    } else {
+      optionsDisplay.children[1].classList.remove('hide');
+    }
+
     // style
     videoToggle.style.backgroundColor = '#ed2939';
     videoToggle.children[0].innerText = 'videocam_off';
   } else {
     defaultTrack.enabled = true;
+
+    // updates constraints data
+    constraints.video = true;
+
+    // visual notification that local video is enabled
+    optionsDisplay.children[1].classList.add('hide');
+    if (optionsDisplay.children[0].classList.contains('hide')) {
+      optionsDisplay.classList.add('hide');
+    }
+
     // style
     videoToggle.style.backgroundColor = '#960aee';
     videoToggle.children[0].innerText = 'videocam';
@@ -56,6 +101,7 @@ function toggleVideo(e) {
 
 const socket = io({ autoConnect: false });
 const connectedPeers = {};
+const connectedPeersCallOptions = {};
 
 const sendMessage = () => {
   const message = messageInput.value.trim();
@@ -115,6 +161,9 @@ socket.on('message', (message) => {
     messageBox.scrollTop = messageBox.scrollHeight - messageBox.clientHeight;
   } else if (message.type == 'join') {
     flashMessage(`${message.username} joined`);
+  } else if (message.type = 'callOptions') {
+    connectedPeersCallOptions[message.userId] = message.constraints;
+    console.log('received callOptions message')
   } else {
     // On 'leave', remove the user video element and their connection object
     const peerUserId = message.userId;
@@ -153,16 +202,43 @@ function flashMessage(message, type) {
   }
 }
 
+// Stores the remote user's callOptions for use in the visual display
+socket.on('callOptions', async (data) => {
+  console.log('Receive callOptions')
+  connectedPeersCallOptions[data.userId] = data.constraints;
+
+  if (data.from) {
+    // emit a callOptions reply
+    const replyData = {
+      constraints: {...constraints, username},
+      userId,
+      to: data.from
+    }
+    await socket.emit('callOptions', replyData);
+  }
+  console.log('Call Options Data', data)
+})
+
 // New code to try webRTC connection
 let localVideo;
 
-const createLocalVideo = () => {
+const createLocalVideo = async () => {
+
+  //emit the call options event
+  const data = {
+    constraints: {...constraints, username},
+    userId,
+    roomId
+  }
+  console.log('Emitting callOptions event')
+  await socket.emit('callOptions', data);
+
   // create video element for local video
   localVideo = document.createElement('video');
   localVideo.setAttribute('autoplay', true);
   localVideo.setAttribute('muted', true);
   localVideo.setAttribute('playsinline', true);
-  localVideo.setAttribute('id', 'local-video');
+  localVideo.className = 'local_view_video'
 
   // Append the video elements to the DOM
   localVideoGrid.appendChild(localVideo);
@@ -194,10 +270,24 @@ const startConnection = async () => {
           // styling
           audioToggle.children[0].innerText = 'mic';
           audioToggle.style.backgroundColor = '#960aee';
+
+          // Visualization to show audio/video enable/disable
+          optionsDisplay.children[0].classList.add('hide');
+          if (optionsDisplay.children[1].classList.contains('hide')) {
+            optionsDisplay.classList.add('hide');
+          }
         } else {
           // add styling
           audioToggle.style.backgroundColor = '#ed2939';
           audioToggle.children[0].innerText = 'mic_off';
+
+          // Visualization to show audio/video enable/disable
+          if (optionsDisplay.classList.contains('hide')) {
+            optionsDisplay.classList.remove('hide');
+            optionsDisplay.children[0].classList.remove('hide');
+          } else {
+            optionsDisplay.children[0].classList.remove('hide');
+          }
         }
       });
       videoTracks.forEach((track) => {
@@ -206,10 +296,24 @@ const startConnection = async () => {
           // styling
           videoToggle.style.backgroundColor = '#960aee';
           videoToggle.children[0].innerText = 'videocam';
+
+          // Visualization to show audio/video enable/disable
+          optionsDisplay.children[1].classList.add('hide');
+          if (optionsDisplay.children[0].classList.contains('hide')) {
+            optionsDisplay.classList.add('hide');
+          }
         } else {
           // add styling
           videoToggle.style.backgroundColor = '#ed2939';
           videoToggle.children[0].innerText = 'videocam_off';
+
+          // Visualization to show audio/video enable/disable
+          if (optionsDisplay.classList.contains('hide')) {
+            optionsDisplay.classList.remove('hide');
+            optionsDisplay.children[1].classList.remove('hide');
+          } else {
+            optionsDisplay.children[1].classList.remove('hide');
+          }
         }
       });
       localVideo.srcObject = stream;
@@ -396,6 +500,8 @@ async function hangup() {
   }
 }
 
+
+
 // creates a peer connection and send and offer to the peer, fires when a new peer joins another peer in a room
 socket.on('ready', async (peerUserId) => {
   await sendOffer(peerUserId);
@@ -408,6 +514,6 @@ socket.on('data', async (data) => {
 
 // Journey begins here :)
 (async () => {
-  createLocalVideo();
+  await createLocalVideo();
   await startConnection();
 })();
