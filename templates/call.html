@@ -27,6 +27,7 @@
     <link rel="manifest" href="/static/images/site.webmanifest">
     <link rel="stylesheet" href="/static/styles/styles.css" />
     <link rel="stylesheet" href="/static/styles/call.css" />
+    <link rel="stylesheet" href="/static/styles/video_views.css" />
     <title>SynVision - {{ room_id }}</title>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
@@ -55,7 +56,12 @@
   <body>
     <main>
       <div class="main-frame">
-        <div id="local-video"></div>
+        <div class="local_view_container">
+          <div class="local_view_call_options_icon_container hide">
+            <span class="material-symbols-outlined mute_option hide">mic_off</span>
+            <span class="material-symbols-outlined video_disable_option hide">videocam_off</span>
+          </div>
+        </div>
         <div id="remote-videos">
           <p id="placeholder-text">
             You're alone in the meeting, invite others.
