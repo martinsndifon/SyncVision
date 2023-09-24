@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """flask app init"""
-from flask import Flask, session, request, render_template
+from flask import Flask, session, request, render_template, redirect
 from views import app_views
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
 from shared_data import room_users
@@ -10,6 +10,14 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = '!syncvisionsecretkey!'
 socketio = SocketIO(app)
 app.register_blueprint(app_views)
+
+
+@app.before_request
+def force_https():
+    if request.url.startswith('http://'):
+        url = request.url.replace('http://', 'https://', 1)
+        code = 301  # Permanent redirect
+        return redirect(url, code=code)
 
 
 @app.errorhandler(404)
