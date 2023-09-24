@@ -12,8 +12,6 @@ const notice = document.getElementById('notice');
 const messageBox = document.getElementById('chat-messages');
 const messageInput = document.getElementById('messageInput');
 
-
-
 // Toggle chat section visibility
 chatButton.addEventListener('click', () => {
   messageInput.focus();
@@ -23,8 +21,8 @@ chatButton.addEventListener('click', () => {
   }
   chatVisible = !chatVisible;
   chatSection.style.transform = chatVisible
-  ? 'translateX(0)'
-  : 'translateX(100%)';
+    ? 'translateX(0)'
+    : 'translateX(100%)';
   chatButton.style.backgroundColor = chatVisible ? '#a35bcf' : '#960aee';
 });
 
@@ -69,7 +67,7 @@ const copy = () => {
   document.body.appendChild(textArea);
   textArea.select();
 
-  navigator.clipboard.writeText(`127.0.0.1:5000/call/${textArea.value}`);
+  navigator.clipboard.writeText(`syncvision.live/call/${textArea.value}`);
   document.body.removeChild(textArea);
   flashMessage('Copied to clipboard');
 };
