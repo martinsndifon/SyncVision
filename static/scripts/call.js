@@ -161,9 +161,6 @@ socket.on('message', (message) => {
     messageBox.scrollTop = messageBox.scrollHeight - messageBox.clientHeight;
   } else if (message.type == 'join') {
     flashMessage(`${message.username} joined`);
-  } else if (message.type = 'callOptions') {
-    connectedPeersCallOptions[message.userId] = message.constraints;
-    console.log('received callOptions message')
   } else {
     // On 'leave', remove the user video element and their connection object
     const peerUserId = message.userId;
@@ -208,9 +205,10 @@ socket.on('callOptions', async (data) => {
   connectedPeersCallOptions[data.userId] = data.constraints;
 
   if (data.from) {
-    // emit a callOptions reply
+    console.log('Sending Reply')
+    // emit a reply
     const replyData = {
-      constraints: {...constraints, username},
+      constraints,
       userId,
       to: data.from
     }
@@ -230,7 +228,6 @@ const createLocalVideo = async () => {
     userId,
     roomId
   }
-  console.log('Emitting callOptions event')
   await socket.emit('callOptions', data);
 
   // create video element for local video
