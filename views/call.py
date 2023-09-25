@@ -84,6 +84,7 @@ def routeRoom(roomId):
         return redirect(url_for('app_views.lobby', roomId=roomId))
     # Delete the host session data
     if 'host' in session:
+        print('deleting host session')
         session.pop('host', None)
     # Renders the call Page
     return render_template('call.html', room_id=roomId, userId=userId, username=username, constraints=constraints)
