@@ -1,6 +1,10 @@
 import redis
+import os
 
-cache = redis.Redis()
+cache = redis.from_url(os.environ.get("REDIS_URL"))
+
+# For local development
+# cache = redis.Redis()
 
 
 def store_user_in_room(room_id, user_id):
