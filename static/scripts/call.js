@@ -87,6 +87,8 @@ const emitLeaveEvent = async () => {
     },
     async (data) => {
       await hangup();
+      window.removeEventListener('beforeunload', emitLeaveEvent);
+      window.removeEventListener('unload', emitLeaveEvent);
       window.location.href = '/';
     }
   );

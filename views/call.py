@@ -3,19 +3,21 @@
 from flask import render_template, redirect, url_for, session, request
 from views import app_views
 from uuid import uuid4
-from shared_data import room_users
+from db import cache, get_users_in_room
 
 
 def check_room_existence(roomId):
     """Check if the room exists"""
-    if roomId not in room_users:
-        return False
-    return True
+    if cache.exists(roomId):
+        return True
+    return False
 
 
 def check_room_capacity(roomId):
     """Check if the room is not at maximum capacity"""
-    if len(room_users[roomId]) == 6:
+    max_capacity = 6
+    current_capacity = get_users_in_room(roomId)
+    if current_capacity >= max_capacity:  # type: ignore
         return True
     return False
 

@@ -3,7 +3,7 @@
 from flask import Flask, session, request, render_template, redirect
 from views import app_views
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
-from shared_data import room_users
+from db import cache, store_user_in_room, remove_room_expiration, remove_user_from_room, get_users_in_room
 
 
 app = Flask(__name__)
@@ -43,10 +43,18 @@ def on_join(data):
     username = session['username']
     room = data['room']
     join_room(room)
-    if room not in room_users:
-        room_users[room] = []
-    if userId not in room_users[room]:
-        room_users[room].append(userId)
+    # if room not in room_users:
+    #     room_users[room] = []
+    # if userId not in room_users[room]:
+    #     room_users[room].append(userId)
+
+    if not cache.exists(room):
+        store_user_in_room(room, 'admin')
+
+    store_user_in_room(room, userId)
+
+    # Remove the expiration for the room if it exists
+    remove_room_expiration(room)
 
     if room not in clients:
         clients[room] = {}
@@ -65,13 +73,23 @@ def on_leave(data):
     userId = data['userId']
     username = data['username']
     room = data['room']
-    if room in room_users and userId in room_users[room]:
-        print('removing user id')
-        room_users[room].remove(userId)
+    # if room in room_users and userId in room_users[room]:
+    #     print('removing user id')
+    #     room_users[room].remove(userId)
+
+    remove_user_from_room(room, userId)
+
     # Delete room if no users are left inside
-    if len(room_users[room]) == 0:
-        print('deleting empty room')
-        del room_users[room]
+    # if len(room_users[room]) == 0:
+    #     print('deleting empty room')
+    #     del room_users[room]
+    if get_users_in_room(room) == 1:
+        print('set the expiration')
+        # Set an expiration of 24 hours for the room key
+        cache.expire(room, 24 * 3600)
+        ttl = cache.ttl(room)
+        print(f'Time to live for {room}: {ttl} seconds')
+    print('Passed the set expiration check')
     # Delete the client's request SID
     if userId in clients[room]:
         del clients[room][userId]
@@ -112,10 +130,11 @@ def transfer_data(message):
 def check_roomId(data):
     """Check if the room exist"""
     roomId = data['roomId']
-    if roomId not in room_users:
-        data = {'result': 'False'}
-    else:
+    if cache.exists(roomId):
         data = {'result': 'True'}
+    else:
+        data = {'result': 'False'}
+
     emit('status', data, to=request.sid)  # type: ignore
 
 
@@ -123,7 +142,9 @@ def check_roomId(data):
 def check_max_capacity(data):
     """Check if the room is already at maximum capacity"""
     roomId = data['roomId']
-    if len(room_users[roomId]) == 6:
+    max_capacity = 6
+    current_capacity = get_users_in_room(roomId)
+    if current_capacity >= max_capacity:  # type: ignore
         data = {'result': 'True'}
     else:
         data = {'result': 'False'}
