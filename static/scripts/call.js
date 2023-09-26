@@ -1,7 +1,5 @@
 'use strict';
 
-console.log('adapter: ', adapter);
-
 const videoGrid = document.getElementById('remote-videos');
 const localVideoGrid = document.getElementById('local-video');
 const messageBox = document.getElementById('chat-messages');
@@ -297,12 +295,9 @@ const createPeerConnection = async (peerUserId) => {
   );
   const iceServers = await response.json();
   try {
-    const pc = new RTCPeerConnection(
-      {
-        iceServers: iceServers,
-      },
-      adapter.browserDetails.browser
-    );
+    const pc = new RTCPeerConnection({
+      iceServers: iceServers,
+    });
     pc.onicecandidate = (event) => onIceCandidate(event, peerUserId);
     pc.ontrack = (event) => onTrack(event, peerUserId);
     for (const track of localStream.getTracks()) {
