@@ -13,11 +13,11 @@ def check_room_existence(roomId):
     return False
 
 
-async def check_room_capacity(roomId):
+def check_room_capacity(roomId):
     """Check if the room is not at maximum capacity"""
     max_capacity = 6
-    current_capacity = await get_users_in_room(roomId)
-    if current_capacity >= max_capacity:
+    current_capacity = get_users_in_room(roomId)
+    if current_capacity >= max_capacity:  # type: ignore
         return True
     return False
 
@@ -66,7 +66,7 @@ def callHandler():
 
 
 @app_views.route('/call/<roomId>', strict_slashes=False)
-async def routeRoom(roomId):
+def routeRoom(roomId):
     """Routes to call html"""
     host = session.get('host')
     if not host:
@@ -75,7 +75,7 @@ async def routeRoom(roomId):
             return redirect(url_for('app_views.home', existence_error='true'))
 
             # Check if room is already at capacity
-        if await check_room_capacity(roomId):
+        if check_room_capacity(roomId):
             return redirect(url_for('app_views.home', capacity_error='true'))
         # Retreives necessary session data
     userId = session.get('userId')

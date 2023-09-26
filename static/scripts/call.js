@@ -76,21 +76,20 @@ messageInput.addEventListener('keydown', (e) => {
 // Function to emit the 'leave' event
 const emitLeaveEvent = async () => {
   console.log('emitting leave event');
-  const data = {
-    userId: userId,
-    room: roomId,
-    username: username,
-  };
-
-  try {
-    await socket.emit('leave', data, async () => {
-      console.log('I am back from the server');
+  await socket.emit(
+    'leave',
+    {
+      userId: userId,
+      room: roomId,
+      username: username,
+    },
+    async (data) => {
       await hangup();
+      window.removeEventListener('beforeunload', emitLeaveEvent);
+      window.removeEventListener('unload', emitLeaveEvent);
       window.location.href = '/';
-    });
-  } catch (error) {
-    console.error('Error emitting leave event:', error);
-  }
+    }
+  );
 };
 
 endCall.addEventListener('click', async () => {

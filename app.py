@@ -48,6 +48,9 @@ def on_join(data):
     # if userId not in room_users[room]:
     #     room_users[room].append(userId)
 
+    if not cache.exists(room):
+        store_user_in_room(room, 'admin')
+
     store_user_in_room(room, userId)
 
     # Remove the expiration for the room if it exists
@@ -65,8 +68,7 @@ def on_join(data):
 
 
 @socketio.on('leave')
-async def on_leave(data):
-    print('just the beginning')
+def on_leave(data):
     """Handle leave event - Remove the user from the room"""
     userId = data['userId']
     username = data['username']
@@ -81,12 +83,13 @@ async def on_leave(data):
     # if len(room_users[room]) == 0:
     #     print('deleting empty room')
     #     del room_users[room]
-    print('reached here then failed')
-    if await get_users_in_room(room) == 0:
+    if get_users_in_room(room) == 1:
         print('set the expiration')
         # Set an expiration of 24 hours for the room key
         cache.expire(room, 24 * 3600)
-    print('did not reach here')
+        ttl = cache.ttl(room)
+        print(f'Time to live for {room}: {ttl} seconds')
+    print('Passed the set expiration check')
     # Delete the client's request SID
     if userId in clients[room]:
         del clients[room][userId]
@@ -140,8 +143,8 @@ def check_max_capacity(data):
     """Check if the room is already at maximum capacity"""
     roomId = data['roomId']
     max_capacity = 6
-    current_capacity = len(get_users_in_room(roomId))
-    if current_capacity >= max_capacity:
+    current_capacity = get_users_in_room(roomId)
+    if current_capacity >= max_capacity:  # type: ignore
         data = {'result': 'True'}
     else:
         data = {'result': 'False'}
