@@ -186,6 +186,7 @@ main {
   gap: 20px;
   justify-content: center;
   margin: 20px;
+  z-index: 100;
 }
 
 /*Info section*/
@@ -264,6 +265,7 @@ main {
   right: 40px;
   cursor: pointer;
   color: #960aee;
+  z-index: 100;
 }
 
 /* Flash message section*/

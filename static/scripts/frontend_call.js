@@ -6,18 +6,19 @@ const chatSection = document.querySelector('.chat-section');
 const closeChatButton = document.getElementById('closeChatButton');
 const copyButton = document.getElementById('copy-button');
 const closeInfoButton = document.getElementById('close-info-button');
-const infoSection = document.getElementById('info-section');
+const infoSectionFrontend = document.getElementById('info-section');
 const infoButton = document.getElementById('info-button');
-const notice = document.getElementById('notice');
-const messageBox = document.getElementById('chat-messages');
-const messageInput = document.getElementById('messageInput');
+const noticeFrontend = document.getElementById('notice');
+const messageBoxScroll = document.getElementById('chat-messages');
+const messageInputFocus = document.getElementById('messageInput');
 
 // Toggle chat section visibility
 chatButton.addEventListener('click', () => {
-  messageInput.focus();
-  messageBox.scrollTop = messageBox.scrollHeight - messageBox.clientHeight;
-  if (!chatVisible && !notice.classList.contains('no_show')) {
-    notice.classList.add('no_show');
+  messageInputFocus.focus();
+  messageBoxScroll.scrollTop =
+    messageBoxScroll.scrollHeight - messageBoxScroll.clientHeight;
+  if (!chatVisible && !noticeFrontend.classList.contains('no_show')) {
+    noticeFrontend.classList.add('no_show');
   }
   chatVisible = !chatVisible;
   chatSection.style.transform = chatVisible
@@ -35,17 +36,17 @@ closeChatButton.addEventListener('click', () => {
 
 //close info section
 closeInfoButton.addEventListener('click', () => {
-  infoSection.classList.remove('show');
-  infoSection.classList.add('hide');
+  infoSectionFrontend.classList.remove('show');
+  infoSectionFrontend.classList.add('hide');
 });
 
 infoButton.addEventListener('click', () => {
-  if (infoSection.classList.contains('show')) {
-    infoSection.classList.remove('show');
-    infoSection.classList.add('hide');
+  if (infoSectionFrontend.classList.contains('show')) {
+    infoSectionFrontend.classList.remove('show');
+    infoSectionFrontend.classList.add('hide');
   } else {
-    infoSection.classList.remove('hide');
-    infoSection.classList.add('show');
+    infoSectionFrontend.classList.remove('hide');
+    infoSectionFrontend.classList.add('show');
   }
 });
 
