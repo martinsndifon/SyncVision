@@ -2,7 +2,7 @@
 
 ## WebRTC Video Conferencing App
 
-The WebRTC Video Conferencing App (syncvision) is a real-time video and audio conferencing application built using WebRTC, Flask, and Socket.IO. It allows users to create and join virtual meeting rooms for online video conferences.
+The WebRTC Video Conferencing App (syncvision) is a real-time video and audio conferencing application built using WebRTC, Flask, and Socket.IO. It allows users to create and join virtual meeting rooms for online video conferencing.
 
 ### Features
 
@@ -20,6 +20,7 @@ The WebRTC Video Conferencing App (syncvision) is a real-time video and audio co
 - **Socket.IO**: Provides real-time communication between the server and clients.
 - **HTML/CSS/JavaScript**: Frontend development.
 - **Open-relay**: A third party STUN/TURN server used.
+- **Redis**: Used to cache meeting and users session data for effective session management.
 - **Heroku**: Deployment platform for the application.
 
 ### Demo/live link
@@ -45,6 +46,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 The WebRTC community for creating an amazing technology that enables web video/audio conferencing.
 Flask and Socket.IO for simplifying server-side development.
+The ALX SE facilitators for providing the opportunity to develop the necessary skills.
 Developers and contributors who helped test this project.
 
 ### Contact
