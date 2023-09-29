@@ -36,6 +36,18 @@ def handle_my_custom_event(data):
 # Store users request SIDs
 clients = {}
 
+@socketio.on('mediaOption')
+def distributeMediaOptions(data):
+    data['from'] = request.sid
+    room = data['roomId']
+    del data['roomId']
+    send(data, to=room, skip_sid=request.sid)
+
+
+@socketio.on('mediaOptionReply')
+def distributeMediaOptions(data):
+    to = data['to']
+    send(data, to=to)
 
 @socketio.on('join')
 def on_join(data):

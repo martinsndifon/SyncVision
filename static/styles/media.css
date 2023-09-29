@@ -117,7 +117,6 @@ video {
 .controls {
     padding-inline: 1rem;
     height: 10vh;
-    border: 1px solid green;
     display: flex;
 }
 

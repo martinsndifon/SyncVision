@@ -70,6 +70,7 @@ function toggleVideo(e) {
 
 const socket = io({ autoConnect: false });
 const connectedPeers = {};
+const connectedPeersOptions = {};
 
 const sendMessage = () => {
   const message = messageInput.value.trim();
@@ -143,7 +144,27 @@ socket.on('message', (message) => {
     infoSection.classList.remove('show');
     infoSection.classList.add('hide');
     flashMessage(`${message.username} joined`);
-  } else {
+  } else if (message.type == 'mediaOption') {
+    console.log('received media options... sending reply');
+    connectedPeersOptions[message.userId] = {
+      constraints: message.constraints,
+      username: message.username
+    }
+    const data = {
+      constraints,
+      username,
+      userId,
+      to: message.from,
+      type: 'mediaOptionReply'
+    }
+    socket.emit('mediaOptionReply', data);
+  } else if (message.type == 'mediaOptionReply') {
+    console.log('received mediaOptionsReply')
+    connectedPeersOptions[message.userId] = {
+      username: message.username,
+      constraints: message.constraints
+    }
+  }else {
     // On 'leave', remove the user video element and their connection object
     const peerUserId = message.userId;
     let remoteVideo = document.getElementById(`${peerUserId}_media`);
@@ -206,6 +227,17 @@ const startConnection = async () => {
       localVideo = mediaContainerData[0];
       // append the local media (the container that holds the local video)
       mediaContainers.append(mediaContainerData[1]);
+
+      const data = {
+        username,
+        userId,
+        constraints,
+        roomId,
+        type: 'mediaOption'
+      }
+      // Emit media options after creating local view
+      socket.emit('mediaOption', data);
+
       toggleMediaNotice('audio', constraints, 'local');
       toggleMediaNotice('video', constraints, 'local');
       const audioTracks = localStream.getAudioTracks();
@@ -258,8 +290,18 @@ const onTrack = (event, peerUserId) => {
   let remoteContainer = document.getElementById(`${peerUserId}_media`);
   if (!remoteContainer) {
     // create video element for the peer
-    remoteContainer = createMediaContainer(peerUserId, event.streams[0], 'Remote');
+    const username = connectedPeersOptions[peerUserId].username;
+    const constraints = connectedPeersOptions[peerUserId].constraints;
+    if (connectedPeersOptions[peerUserId]) {
+      remoteContainer = createMediaContainer(peerUserId, event.streams[0], username);
+    } else {
+      remoteContainer = createMediaContainer(peerUserId, event.streams[0], 'Remote');
+    }
     mediaContainers.prepend(remoteContainer)
+    if (constraints) {
+      toggleMediaNotice('audio', constraints, peerUserId);
+      toggleMediaNotice('video', constraints, peerUserId);
+    }
     infoSection.classList.add('hide');
     infoSection.classList.remove('show');
   }
