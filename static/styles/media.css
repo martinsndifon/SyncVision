@@ -375,7 +375,7 @@ aside {
 
 
 /* misc */
-.options_container.no_visible, .options_mic.no_visible, .options_camera.no_visible, .media_alt.no_visible {
+.options_container.no_visible, .share_screen.no_visible, .options_mic.no_visible, .options_camera.no_visible, .media_alt.no_visible {
   display: none;
 }
 
