@@ -14,11 +14,12 @@ const messageInputFocus = document.getElementById('messageInput');
 
 // Toggle chat section visibility
 chatButton.addEventListener('click', () => {
-  messageInputFocus.focus();
   messageBoxScroll.scrollTop =
-    messageBoxScroll.scrollHeight - messageBoxScroll.clientHeight;
+  messageBoxScroll.scrollHeight - messageBoxScroll.clientHeight;
   if (!chatVisible && !noticeFrontend.classList.contains('no_show')) {
     noticeFrontend.classList.add('no_show');
+  } else {
+    messageInputFocus.focus();
   }
   chatVisible = !chatVisible;
   chatSection.style.transform = chatVisible
