@@ -26,8 +26,15 @@ function toggleAudio(e) {
     defaultTrack.enabled = false;
     constraints.audio = false;
 
-    // toggle notice
+    // toggle notice and send the change to the room
     toggleMediaNotice('audio', constraints, 'local');
+    const data = {
+      userId,
+      constraints,
+      roomId,
+      type: 'mediaOptionChange'
+    }
+    socket.emit('mediaOptionChange', data);
 
     // styling
     audioToggle.style.backgroundColor = '#ed2939';
@@ -35,8 +42,15 @@ function toggleAudio(e) {
   } else {
     defaultTrack.enabled = true;
     constraints.audio = true;
-    // toggle notice
+    // toggle notice and send the change to the room
     toggleMediaNotice('audio', constraints, 'local');
+    const data = {
+      userId,
+      constraints,
+      roomId,
+      type: 'mediaOptionChange'
+    }
+    socket.emit('mediaOptionChange', data);
 
     // add styling
     audioToggle.style.backgroundColor = '#960aee';
@@ -50,8 +64,16 @@ function toggleVideo(e) {
   if (defaultTrack.enabled) {
     defaultTrack.enabled = false;
     constraints.video = false;
-    // toggle notice
+    // toggle notice and send the change to the room
+
     toggleMediaNotice('camera', constraints, 'local');
+    const data = {
+      userId,
+      constraints,
+      roomId,
+      type: 'mediaOptionChange'
+    }
+    socket.emit('mediaOptionChange', data);
 
     // style
     videoToggle.style.backgroundColor = '#ed2939';
@@ -59,8 +81,15 @@ function toggleVideo(e) {
   } else {
     defaultTrack.enabled = true;
     constraints.video = true;
-    // toggle notice
+    // toggle notice and send the change to the room
     toggleMediaNotice('camera', constraints, 'local');
+    const data = {
+      userId,
+      constraints,
+      roomId,
+      type: 'mediaOptionChange'
+    }
+    socket.emit('mediaOptionChange', data);
 
     // style
     videoToggle.style.backgroundColor = '#960aee';
@@ -145,7 +174,7 @@ socket.on('message', (message) => {
     infoSection.classList.add('hide');
     flashMessage(`${message.username} joined`);
   } else if (message.type == 'mediaOption') {
-    console.log('received media options... sending reply');
+    // Receives the media Options
     connectedPeersOptions[message.userId] = {
       constraints: message.constraints,
       username: message.username
@@ -159,11 +188,16 @@ socket.on('message', (message) => {
     }
     socket.emit('mediaOptionReply', data);
   } else if (message.type == 'mediaOptionReply') {
-    console.log('received mediaOptionsReply')
+    // receives the mediaOption Reply
     connectedPeersOptions[message.userId] = {
       username: message.username,
-      constraints: message.constraints
+      constraints: message.constraints,
     }
+  } else if (message.type == 'mediaOptionChange') {
+    //receive the mediaOptionChanges
+    connectedPeersOptions[message.userId].constraints = message.constraints;
+    toggleMediaNotice('audio', message.constraints, message.userId);
+    toggleMediaNotice('video', message.constraints, message.userId);
   }else {
     // On 'leave', remove the user video element and their connection object
     const peerUserId = message.userId;
