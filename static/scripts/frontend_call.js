@@ -68,7 +68,9 @@ const copy = () => {
   document.body.appendChild(textArea);
   textArea.select();
 
-  navigator.clipboard.writeText(`syncvision.live/call/${textArea.value}`);
+  navigator.clipboard.writeText(
+    `https://syncvision.live/call/${textArea.value}`
+  );
   document.body.removeChild(textArea);
   flashMessage('Copied to clipboard');
 };
