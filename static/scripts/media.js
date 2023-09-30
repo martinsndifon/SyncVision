@@ -9,7 +9,8 @@ function createMediaContainer(peerId, stream, username) {
     const container = document.createElement('div');
     container.className = "media_container";
     if (peerId == 'local') {
-        container.classList.add('local_media')
+        container.classList.add('local_media');
+        container.classList.add('one_container')
     }
     container.id = `${peerId}_media`;
 
@@ -97,6 +98,38 @@ function toggleMediaNotice(media, constraints, peerId) {
             } else {
                 cameraOption.classList.remove('no_visible');
             }
+        }
+    }
+}
+
+function adjustContainers (mediaContainers, remoteContainer, type) {
+    const local = document.getElementById('local_media');
+    if (type == 'addContainer') {
+        if (mediaContainers.children.length == 2) {
+          local.classList.add('local_one_container');
+          local.classList.remove('one_container');
+          remoteContainer.classList.add('one_container');
+        } else if (mediaContainers.children.length > 2) {
+          const current_one_container = document.querySelector('.one_container');
+            if (current_one_container) {
+                current_one_container.classList.remove('one_container');
+                local.classList.remove('local_one_container');
+            }
+        }
+    } else {
+        console.log('readjusting...')
+        if (mediaContainers.children.length == 1) {
+            local.classList.remove('local_one_container')
+            local.classList.add('one_container');
+        }
+        if (mediaContainers.children.length == 2) {
+            Array.from(mediaContainers.children).forEach((container) => {
+                if (container.id != "local_media") {
+                    container.classList.add('one_container');
+                }
+            })
+            local.classList.remove('one_container');
+            local.classList.add('local_one_container');
         }
     }
 }
