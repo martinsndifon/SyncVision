@@ -45,7 +45,7 @@ def distributeMediaOptions(data):
 
 
 @socketio.on('mediaOptionReply')
-def distributeMediaOptions(data):
+def distributeMediaOptionsReply(data):
     """Distributes the mediaOptions"""
     to = data['to']
     send(data, to=to)
