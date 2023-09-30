@@ -10,6 +10,11 @@ const videoToggle = document.getElementById('videotoggle');
 const placeholderText = document.getElementById('placeholder-text');
 const infoSection = document.getElementById('info-section');
 const notice = document.getElementById('notice');
+const screeenShare = document.getElementById('share_screen_btn');
+
+screeenShare.addEventListener('click', (e) => {
+  flashMessage('soon to be Implemented...');
+})
 
 audioToggle.addEventListener('click', toggleAudio);
 videoToggle.addEventListener('click', toggleVideo);
@@ -205,7 +210,9 @@ socket.on('message', (message) => {
     if (remoteVideo) {
       remoteVideo.remove();
     }
+    adjustContainers(mediaContainers, null, 'reAdjustContainer');
     delete connectedPeers[peerUserId];
+
 
     if (Object.keys(connectedPeers).length === 0) {
       console.log('Only once user present')
@@ -331,7 +338,8 @@ const onTrack = (event, peerUserId) => {
     } else {
       remoteContainer = createMediaContainer(peerUserId, event.streams[0], 'Remote');
     }
-    mediaContainers.prepend(remoteContainer)
+    mediaContainers.prepend(remoteContainer);
+    adjustContainers(mediaContainers, remoteContainer, 'addContainer');
     if (constraints) {
       toggleMediaNotice('audio', constraints, peerUserId);
       toggleMediaNotice('video', constraints, peerUserId);
