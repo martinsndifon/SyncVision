@@ -8,23 +8,24 @@ const submit = document.getElementById('submit-btn');
 const form = document.getElementById('form');
 const input = document.getElementById('userName');
 
-
 submit.addEventListener('click', (e) => {
   form.submit();
   form.reset();
-})
-
+});
 
 let init = async () => {
-  await navigator.mediaDevices.getUserMedia({
-    video: true,
-    audio: true,
-  }).then((stream) => {
-    localStream = stream;
-    document.getElementById("localVideo").srcObject = localStream;
-  })
+  await navigator.mediaDevices
+    .getUserMedia({
+      video: true,
+      audio: true,
+    })
+    .then((stream) => {
+      localStream = stream;
+      document.getElementById('localVideo').srcObject = localStream;
+      mic.disabled = false;
+      camera.disabled = false;
+    });
 };
-
 
 const toggleCamera = async (e) => {
   let target = e.target;
@@ -37,9 +38,9 @@ const toggleCamera = async (e) => {
     videoDisable.checked = true;
   }
   const videoTracks = localStream.getVideoTracks();
-  videoTracks.forEach((track) => track.enabled = !videoDisable.checked);
+  videoTracks.forEach((track) => (track.enabled = !videoDisable.checked));
   if (target.classList.contains('enable_color')) {
-    target.classList.remove('enable_color')
+    target.classList.remove('enable_color');
   } else {
     target.classList.add('enable_color');
   }
@@ -61,9 +62,9 @@ const toggleMic = async (e) => {
     audioMute.checked = true;
   }
   const audioTracks = localStream.getAudioTracks();
-  audioTracks.forEach((track) => track.enabled = !audioMute.checked);
+  audioTracks.forEach((track) => (track.enabled = !audioMute.checked));
   if (target.classList.contains('enable_color')) {
-    target.classList.remove('enable_color')
+    target.classList.remove('enable_color');
   } else {
     target.classList.add('enable_color');
   }
@@ -72,21 +73,21 @@ const toggleMic = async (e) => {
   } else {
     target.children[0].innerText = 'mic';
   }
-}
+};
 
-camera.addEventListener("click", toggleCamera);
-mic.addEventListener("click", toggleMic);
+camera.addEventListener('click', toggleCamera);
+mic.addEventListener('click', toggleMic);
 init();
 
-const nameInput = document.getElementById("userName");
+const nameInput = document.getElementById('userName');
 
-nameInput.addEventListener("input", handleInput);
+nameInput.addEventListener('input', handleInput);
 
 function handleInput(e) {
   const target = e.target;
   const value = target.value.trim();
   if (value.length >= 2) {
-    submit.classList.add("active");
+    submit.classList.add('active');
     submit.disabled = false;
   } else {
     submit.classList.remove('active');

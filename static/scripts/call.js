@@ -1,7 +1,6 @@
 'use strict';
 
-const videoGrid = document.getElementById('remote-videos');
-const localVideoGrid = document.getElementById('local-video');
+const mediaContainers = document.getElementById('media_containers');
 const messageBox = document.getElementById('chat-messages');
 const sendbutton = document.getElementById('sendMessageButton');
 const messageInput = document.getElementById('messageInput');
@@ -10,9 +9,12 @@ const audioToggle = document.getElementById('audiotoggle');
 const videoToggle = document.getElementById('videotoggle');
 const placeholderText = document.getElementById('placeholder-text');
 const infoSection = document.getElementById('info-section');
-
-//
 const notice = document.getElementById('notice');
+const screeenShare = document.getElementById('share_screen_btn');
+
+screeenShare.addEventListener('click', (e) => {
+  flashMessage('soon to be Implemented...');
+})
 
 audioToggle.addEventListener('click', toggleAudio);
 videoToggle.addEventListener('click', toggleVideo);
@@ -27,11 +29,34 @@ function toggleAudio(e) {
   const defaultTrack = audioTracks[0];
   if (defaultTrack.enabled) {
     defaultTrack.enabled = false;
+    constraints.audio = false;
+
+    // toggle notice and send the change to the room
+    toggleMediaNotice('audio', constraints, 'local');
+    const data = {
+      userId,
+      constraints,
+      roomId,
+      type: 'mediaOptionChange'
+    }
+    socket.emit('mediaOptionChange', data);
+
     // styling
     audioToggle.style.backgroundColor = '#ed2939';
     audioToggle.children[0].innerText = 'mic_off';
   } else {
     defaultTrack.enabled = true;
+    constraints.audio = true;
+    // toggle notice and send the change to the room
+    toggleMediaNotice('audio', constraints, 'local');
+    const data = {
+      userId,
+      constraints,
+      roomId,
+      type: 'mediaOptionChange'
+    }
+    socket.emit('mediaOptionChange', data);
+
     // add styling
     audioToggle.style.backgroundColor = '#960aee';
     audioToggle.children[0].innerText = 'mic';
@@ -43,11 +68,34 @@ function toggleVideo(e) {
   const defaultTrack = videoTracks[0];
   if (defaultTrack.enabled) {
     defaultTrack.enabled = false;
+    constraints.video = false;
+    // toggle notice and send the change to the room
+
+    toggleMediaNotice('camera', constraints, 'local');
+    const data = {
+      userId,
+      constraints,
+      roomId,
+      type: 'mediaOptionChange'
+    }
+    socket.emit('mediaOptionChange', data);
+
     // style
     videoToggle.style.backgroundColor = '#ed2939';
     videoToggle.children[0].innerText = 'videocam_off';
   } else {
     defaultTrack.enabled = true;
+    constraints.video = true;
+    // toggle notice and send the change to the room
+    toggleMediaNotice('camera', constraints, 'local');
+    const data = {
+      userId,
+      constraints,
+      roomId,
+      type: 'mediaOptionChange'
+    }
+    socket.emit('mediaOptionChange', data);
+
     // style
     videoToggle.style.backgroundColor = '#960aee';
     videoToggle.children[0].innerText = 'videocam';
@@ -56,6 +104,7 @@ function toggleVideo(e) {
 
 const socket = io({ autoConnect: false });
 const connectedPeers = {};
+const connectedPeersOptions = {};
 
 const sendMessage = () => {
   const message = messageInput.value.trim();
@@ -126,18 +175,47 @@ socket.on('message', (message) => {
     messageBox.append(div);
     messageBox.scrollTop = messageBox.scrollHeight - messageBox.clientHeight;
   } else if (message.type == 'join') {
+    infoSection.classList.remove('show');
+    infoSection.classList.add('hide');
     flashMessage(`${message.username} joined`);
-  } else {
+  } else if (message.type == 'mediaOption') {
+    // Receives the media Options
+    connectedPeersOptions[message.userId] = {
+      constraints: message.constraints,
+      username: message.username
+    }
+    const data = {
+      constraints,
+      username,
+      userId,
+      to: message.from,
+      type: 'mediaOptionReply'
+    }
+    socket.emit('mediaOptionReply', data);
+  } else if (message.type == 'mediaOptionReply') {
+    // receives the mediaOption Reply
+    connectedPeersOptions[message.userId] = {
+      username: message.username,
+      constraints: message.constraints,
+    }
+  } else if (message.type == 'mediaOptionChange') {
+    //receive the mediaOptionChanges
+    connectedPeersOptions[message.userId].constraints = message.constraints;
+    toggleMediaNotice('audio', message.constraints, message.userId);
+    toggleMediaNotice('video', message.constraints, message.userId);
+  }else {
     // On 'leave', remove the user video element and their connection object
     const peerUserId = message.userId;
-    let remoteVideo = document.getElementById(`remoteVideo_${peerUserId}`);
+    let remoteVideo = document.getElementById(`${peerUserId}_media`);
     if (remoteVideo) {
       remoteVideo.remove();
     }
+    adjustContainers(mediaContainers, null, 'reAdjustContainer');
     delete connectedPeers[peerUserId];
 
+
     if (Object.keys(connectedPeers).length === 0) {
-      placeholderText.style.display = 'block';
+      console.log('Only once user present')
       infoSection.classList.remove('hide');
       infoSection.classList.add('show');
     }
@@ -168,18 +246,6 @@ function flashMessage(message, type) {
 // New code to try webRTC connection
 let localVideo;
 
-const createLocalVideo = () => {
-  // create video element for local video
-  localVideo = document.createElement('video');
-  localVideo.setAttribute('autoplay', true);
-  localVideo.setAttribute('muted', true);
-  localVideo.setAttribute('playsinline', true);
-  localVideo.setAttribute('id', 'local-video');
-
-  // Append the video elements to the DOM
-  localVideoGrid.appendChild(localVideo);
-};
-
 let localStream;
 
 // Function to send data to the server on 'data' emit
@@ -198,6 +264,23 @@ const startConnection = async () => {
     .getUserMedia({ audio: true, video: true })
     .then((stream) => {
       localStream = stream;
+      const mediaContainerData = createMediaContainer('local', localStream, username);
+      localVideo = mediaContainerData[0];
+      // append the local media (the container that holds the local video)
+      mediaContainers.append(mediaContainerData[1]);
+
+      const data = {
+        username,
+        userId,
+        constraints,
+        roomId,
+        type: 'mediaOption'
+      }
+      // Emit media options after creating local view
+      socket.emit('mediaOption', data);
+
+      toggleMediaNotice('audio', constraints, 'local');
+      toggleMediaNotice('video', constraints, 'local');
       const audioTracks = localStream.getAudioTracks();
       const videoTracks = localStream.getVideoTracks();
       audioTracks.forEach((track) => {
@@ -224,8 +307,6 @@ const startConnection = async () => {
           videoToggle.children[0].innerText = 'videocam_off';
         }
       });
-      localVideo.srcObject = stream;
-      localVideo.muted = true;
       socket.connect();
       socket.emit('join', { room: roomId });
     })
@@ -244,47 +325,28 @@ const onIceCandidate = async (event, peerUserId) => {
   }
 };
 
-// helper function for onTrack
-const orderVideos = () => {
-  // Calculate the number of videos and adjust their size
-  const remoteVideos = videoGrid.querySelectorAll('.remote-video');
-  const videoCount = remoteVideos.length;
-  const maxVideosPerRow = window.innerWidth >= 750 ? 3 : 2;
-
-  remoteVideos.forEach((video) => {
-    video.style.maxWidth = `calc(100% / ${Math.min(
-      maxVideosPerRow,
-      videoCount
-    )} - 10px)`;
-    video.style.maxHeight = `calc(100% / ${Math.ceil(
-      videoCount / maxVideosPerRow
-    )} - 10px)`;
-  });
-};
-// order videos on resize of window
-window.addEventListener('resize', orderVideos);
 
 // Set the srcObject of the remote video element’s reference to the first stream in the track
 const onTrack = (event, peerUserId) => {
-  let remoteVideo = document.getElementById(`remoteVideo_${peerUserId}`);
-  if (!remoteVideo) {
+  let remoteContainer = document.getElementById(`${peerUserId}_media`);
+  if (!remoteContainer) {
     // create video element for the peer
-    remoteVideo = document.createElement('video');
-    remoteVideo.setAttribute('autoplay', true);
-    remoteVideo.setAttribute('playsinline', true);
-    remoteVideo.setAttribute('id', `remoteVideo_${peerUserId}`);
-    remoteVideo.setAttribute('class', 'remote-video');
-    videoGrid.appendChild(remoteVideo);
-  }
-  if (!(getComputedStyle(placeholderText).display === 'none')) {
-    placeholderText.style.display = 'none';
-    if (infoSection.classList.contains('show')) {
-      infoSection.classList.remove('show');
-      infoSection.classList.add('hide');
+    const username = connectedPeersOptions[peerUserId].username;
+    const constraints = connectedPeersOptions[peerUserId].constraints;
+    if (connectedPeersOptions[peerUserId]) {
+      remoteContainer = createMediaContainer(peerUserId, event.streams[0], username);
+    } else {
+      remoteContainer = createMediaContainer(peerUserId, event.streams[0], 'Remote');
     }
+    mediaContainers.prepend(remoteContainer);
+    adjustContainers(mediaContainers, remoteContainer, 'addContainer');
+    if (constraints) {
+      toggleMediaNotice('audio', constraints, peerUserId);
+      toggleMediaNotice('video', constraints, peerUserId);
+    }
+    infoSection.classList.add('hide');
+    infoSection.classList.remove('show');
   }
-  remoteVideo.srcObject = event.streams[0];
-  orderVideos();
 };
 
 // Create a new peer connection
@@ -420,6 +482,5 @@ socket.on('data', async (data) => {
 
 // Journey begins here :)
 (async () => {
-  createLocalVideo();
   await startConnection();
 })();

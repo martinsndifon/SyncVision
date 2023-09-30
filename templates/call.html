@@ -55,10 +55,9 @@
       href="/static/images/favicon-16x16.png"
     />
     <link rel="manifest" href="/static/images/site.webmanifest" />
-    <link rel="stylesheet" href="/static/styles/styles.css" />
-    <link rel="stylesheet" href="/static/styles/call.css" />
+    <link rel="stylesheet" href="/static/styles/media.css" />
     <title>SynVision - {{ room_id }}</title>
-    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js" defer></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"
       integrity="sha512-zoJXRvW2gC8Z0Xo3lBbao5+AS3g6YWr5ztKqaicua11xHo+AvE1b0lT9ODgrHTmNUxeCw0Ry4BGRYZfXu70weg=="
@@ -76,92 +75,102 @@
       constraints.audio = '{{ constraints.audio }}';
       constraints.video = '{{ constraints.video }}';
     </script>
+    <script src="/static/scripts/media.js" defer></script>
     <script src="/static/scripts/frontend_call.js" defer></script>
     <script src="/static/scripts/call.js" defer></script>
   </head>
   <body>
     <main>
-      <div class="main-frame">
-        <div id="local-video"></div>
-        <div id="remote-videos">
-          <p id="placeholder-text">
-            You're alone in the meeting, invite others.
-          </p>
+        <div class="media_grid">
+            <div class="media_containers" id="media_containers"></div>
+            <div class="screen" id="screen_container"></div>
         </div>
+        <div class="controls" id="controls">
+            <!-- Buttons for call control -->
+            <div class="main">
 
-        <!-- Chat Section -->
-        <div class="chat-section">
-          <div class="chat-header">
-            <h3>Chat</h3>
-            <button id="closeChatButton" class="close-button">&#10006;</button>
-          </div>
-          <div id="chat-messages" class="chat-messages"></div>
-          <div class="chat-input">
-            <input
-              type="text"
-              id="messageInput"
-              placeholder="Type your message..."
-              autofocus
-              autocomplete="name"
-            />
-            <button id="sendMessageButton" class="material-symbols-outlined">
-              send
-            </button>
-          </div>
-        </div>
-
-        <!-- Info section -->
-        <div id="info-section" class="info-section show">
-          <div class="info-header">
-            <h3>Your meeting is ready</h3>
-            <button
-              id="close-info-button"
-              class="close-button close-button-info"
-            >
-              &#10006;
-            </button>
-          </div>
-          <div class="information">
-            <p>Share this meeting link with others you want in the meeting</p>
-            <div class="copy-main">
-              <p id="copy-text" class="copy-text">{{ room_id }}</p>
-              <button
-                id="copy-button"
-                class="material-symbols-outlined copy-button"
-              >
-                content_copy
+                <button title="mic" type="button" class="control-btn" id="audiotoggle">
+                    <span class="material-symbols-outlined"> mic </span>
+                </button>
+                <button title="camera" type="button" class="control-btn" id="videotoggle">
+                    <span class="material-symbols-outlined"> videocam </span>
+                </button>
+                <button title="present" class="control-btn share_screen" id="share_screen_btn">
+                    <span class="material-symbols-outlined ">
+                        present_to_all
+                    </span>
+                </button>
+                <button
+                  title="chat"
+                  type="button"
+                  id="chatButton"
+                  class="control-btn"
+                  id="chatButton"
+                >
+                  <span class="notice no_show" id="notice"></span>
+                  <span class="material-symbols-outlined"> chat </span>
+                </button>
+                <button title="end call" type="button" class="control-btn" id="leave-btn">
+                  <span class="material-symbols-outlined"> call_end </span>
+                </button>
+            </div>
+            <div class="info">
+              <button title="info" class="material-symbols-outlined info-btn" id="info-button">
+                Info
               </button>
             </div>
-            <p>Joined as {{ username }}</p>
+        </div>
+    </main>
+    <aside>
+         <!-- Chat Section -->
+         <div class="chat-section">
+            <div class="chat-header">
+              <h3>Chat</h3>
+              <button id="closeChatButton" class="close-button">&#10006;</button>
+            </div>
+            <div id="chat-messages" class="chat-messages"></div>
+            <div class="chat-input">
+              <input
+                type="text"
+                id="messageInput"
+                placeholder="Type your message..."
+                autofocus
+                autocomplete="name"
+              />
+              <button id="sendMessageButton" class="material-symbols-outlined">
+                send
+              </button>
+            </div>
+          </div>
+
+           <!-- Info section -->
+        <div id="info-section" class="info-section show">
+            <div class="info-header">
+              <h3>Your meeting is ready</h3>
+              <button
+                id="close-info-button"
+                class="close-button close-button-info"
+              >
+                &#10006;
+              </button>
+            </div>
+            <div class="information">
+              <p>Share this meeting link with others you want in the meeting</p>
+              <div class="copy-main">
+                <p id="copy-text" class="copy-text">{{ room_id }}</p>
+                <button
+                  id="copy-button"
+                  class="material-symbols-outlined copy-button"
+                >
+                  content_copy
+                </button>
+              </div>
+              <p>Joined as {{ username }}</p>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div id="controls">
-        <!-- Buttons for call control -->
-        <button type="button" class="control-container" id="audiotoggle">
-          <span class="material-symbols-outlined"> mic </span>
-        </button>
-        <button type="button" class="control-container" id="videotoggle">
-          <span class="material-symbols-outlined"> videocam </span>
-        </button>
-        <button
-          type="button"
-          id="chatButton"
-          class="control-container"
-          id="chatButton"
-        >
-          <span class="notice no_show" id="notice"></span>
-          <span class="material-symbols-outlined"> chat </span>
-        </button>
-        <button type="button" class="control-container" id="leave-btn">
-          <span class="material-symbols-outlined"> call_end </span>
-        </button>
-      </div>
-    </main>
-    <div id="flash-message" class="flash-message"></div>
-    <div id="info-button" class="material-symbols-outlined info-button">
-      info
-    </div>
+  
+        <div id="flash-message" class="flash-message"></div>
+    </aside>
   </body>
 </html>
