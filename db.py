@@ -1,10 +1,10 @@
 import redis
-# import os
+import os
 
 # for heroku deployment
-# cache = redis.from_url(os.environ.get("REDIS_URL"))
+cache = redis.from_url(os.environ.get("REDIS_URL"))
 
-cache = redis.Redis()
+# cache = redis.Redis()
 
 
 def store_user_in_room(room_id, user_id):

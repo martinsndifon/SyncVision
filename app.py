@@ -13,12 +13,12 @@ app.register_blueprint(app_views)
 
 
 # for heroku deployment
-# @app.before_request
-# def force_https():
-#     if request.url.startswith('http://'):
-#         url = request.url.replace('http://', 'https://', 1)
-#         code = 301  # Permanent redirect
-#         return redirect(url, code=code)
+@app.before_request
+def force_https():
+    if request.url.startswith('http://'):
+        url = request.url.replace('http://', 'https://', 1)
+        code = 301  # Permanent redirect
+        return redirect(url, code=code)
 
 
 @app.errorhandler(404)
