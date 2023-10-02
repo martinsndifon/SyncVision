@@ -12,9 +12,13 @@ const infoSection = document.getElementById('info-section');
 const notice = document.getElementById('notice');
 const screeenShare = document.getElementById('share_screen_btn');
 
+const socket = io({ autoConnect: false });
+const connectedPeers = {};
+const connectedPeersOptions = {};
+
 screeenShare.addEventListener('click', (e) => {
   flashMessage('soon to be Implemented...');
-})
+});
 
 audioToggle.addEventListener('click', toggleAudio);
 videoToggle.addEventListener('click', toggleVideo);
@@ -24,7 +28,7 @@ constraints.audio = constraints.audio === 'True' ? true : false;
 constraints.video = constraints.video === 'True' ? true : false;
 
 //function to mute/unmute audio
-function toggleAudio(e) {
+async function toggleAudio(e) {
   const audioTracks = localStream.getAudioTracks();
   const defaultTrack = audioTracks[0];
   if (defaultTrack.enabled) {
@@ -32,13 +36,13 @@ function toggleAudio(e) {
     constraints.audio = false;
 
     // toggle notice and send the change to the room
-    toggleMediaNotice('audio', constraints, 'local');
+    await toggleMediaNotice('audio', constraints, 'local');
     const data = {
       userId,
       constraints,
       roomId,
-      type: 'mediaOptionChange'
-    }
+      type: 'mediaOptionChange',
+    };
     socket.emit('mediaOptionChange', data);
 
     // styling
@@ -48,13 +52,13 @@ function toggleAudio(e) {
     defaultTrack.enabled = true;
     constraints.audio = true;
     // toggle notice and send the change to the room
-    toggleMediaNotice('audio', constraints, 'local');
+    await toggleMediaNotice('audio', constraints, 'local');
     const data = {
       userId,
       constraints,
       roomId,
-      type: 'mediaOptionChange'
-    }
+      type: 'mediaOptionChange',
+    };
     socket.emit('mediaOptionChange', data);
 
     // add styling
@@ -63,7 +67,7 @@ function toggleAudio(e) {
   }
 }
 
-function toggleVideo(e) {
+async function toggleVideo(e) {
   const videoTracks = localStream.getVideoTracks();
   const defaultTrack = videoTracks[0];
   if (defaultTrack.enabled) {
@@ -71,13 +75,13 @@ function toggleVideo(e) {
     constraints.video = false;
     // toggle notice and send the change to the room
 
-    toggleMediaNotice('camera', constraints, 'local');
+    await toggleMediaNotice('camera', constraints, 'local');
     const data = {
       userId,
       constraints,
       roomId,
-      type: 'mediaOptionChange'
-    }
+      type: 'mediaOptionChange',
+    };
     socket.emit('mediaOptionChange', data);
 
     // style
@@ -87,13 +91,13 @@ function toggleVideo(e) {
     defaultTrack.enabled = true;
     constraints.video = true;
     // toggle notice and send the change to the room
-    toggleMediaNotice('camera', constraints, 'local');
+    await toggleMediaNotice('camera', constraints, 'local');
     const data = {
       userId,
       constraints,
       roomId,
-      type: 'mediaOptionChange'
-    }
+      type: 'mediaOptionChange',
+    };
     socket.emit('mediaOptionChange', data);
 
     // style
@@ -101,10 +105,6 @@ function toggleVideo(e) {
     videoToggle.children[0].innerText = 'videocam';
   }
 }
-
-const socket = io({ autoConnect: false });
-const connectedPeers = {};
-const connectedPeersOptions = {};
 
 const sendMessage = () => {
   const message = messageInput.value.trim();
@@ -124,7 +124,6 @@ messageInput.addEventListener('keydown', (e) => {
 
 // Function to emit the 'leave' event
 const emitLeaveEvent = async () => {
-  console.log('emitting leave event');
   await socket.emit(
     'leave',
     {
@@ -153,7 +152,7 @@ socket.on('connect', function () {
   socket.emit('connected', { data: 'Connected so signalling server!' });
 });
 
-socket.on('message', (message) => {
+socket.on('message', async (message) => {
   if (message.type == 'chat') {
     const from = message.from;
     if (from != username) {
@@ -182,28 +181,28 @@ socket.on('message', (message) => {
     // Receives the media Options
     connectedPeersOptions[message.userId] = {
       constraints: message.constraints,
-      username: message.username
-    }
+      username: message.username,
+    };
     const data = {
       constraints,
       username,
       userId,
       to: message.from,
-      type: 'mediaOptionReply'
-    }
-    socket.emit('mediaOptionReply', data);
+      type: 'mediaOptionReply',
+    };
+    await socket.emit('mediaOptionReply', data);
   } else if (message.type == 'mediaOptionReply') {
     // receives the mediaOption Reply
     connectedPeersOptions[message.userId] = {
       username: message.username,
       constraints: message.constraints,
-    }
+    };
   } else if (message.type == 'mediaOptionChange') {
     //receive the mediaOptionChanges
     connectedPeersOptions[message.userId].constraints = message.constraints;
-    toggleMediaNotice('audio', message.constraints, message.userId);
-    toggleMediaNotice('video', message.constraints, message.userId);
-  }else {
+    await toggleMediaNotice('audio', message.constraints, message.userId);
+    await toggleMediaNotice('video', message.constraints, message.userId);
+  } else {
     // On 'leave', remove the user video element and their connection object
     const peerUserId = message.userId;
     let remoteVideo = document.getElementById(`${peerUserId}_media`);
@@ -213,9 +212,7 @@ socket.on('message', (message) => {
     adjustContainers(mediaContainers, null, 'reAdjustContainer');
     delete connectedPeers[peerUserId];
 
-
     if (Object.keys(connectedPeers).length === 0) {
-      console.log('Only once user present')
       infoSection.classList.remove('hide');
       infoSection.classList.add('show');
     }
@@ -243,9 +240,8 @@ function flashMessage(message, type) {
   }
 }
 
-// New code to try webRTC connection
+// local video and stream
 let localVideo;
-
 let localStream;
 
 // Function to send data to the server on 'data' emit
@@ -262,9 +258,13 @@ const sendData = async (peerUserId, data) => {
 const startConnection = async () => {
   await navigator.mediaDevices
     .getUserMedia({ audio: true, video: true })
-    .then((stream) => {
+    .then(async (stream) => {
       localStream = stream;
-      const mediaContainerData = createMediaContainer('local', localStream, username);
+      const mediaContainerData = createMediaContainer(
+        'local',
+        localStream,
+        username
+      );
       localVideo = mediaContainerData[0];
       // append the local media (the container that holds the local video)
       mediaContainers.append(mediaContainerData[1]);
@@ -274,13 +274,16 @@ const startConnection = async () => {
         userId,
         constraints,
         roomId,
-        type: 'mediaOption'
-      }
-      // Emit media options after creating local view
-      socket.emit('mediaOption', data);
+        type: 'mediaOption',
+      };
+      // connect to socketio
+      socket.connect();
 
-      toggleMediaNotice('audio', constraints, 'local');
-      toggleMediaNotice('video', constraints, 'local');
+      // Emit media options after creating local view
+      await socket.emit('mediaOption', data);
+
+      await toggleMediaNotice('audio', constraints, 'local');
+      await toggleMediaNotice('video', constraints, 'local');
       const audioTracks = localStream.getAudioTracks();
       const videoTracks = localStream.getVideoTracks();
       audioTracks.forEach((track) => {
@@ -307,7 +310,6 @@ const startConnection = async () => {
           videoToggle.children[0].innerText = 'videocam_off';
         }
       });
-      socket.connect();
       socket.emit('join', { room: roomId });
     })
     .catch(() => {
@@ -325,24 +327,31 @@ const onIceCandidate = async (event, peerUserId) => {
   }
 };
 
-
 // Set the srcObject of the remote video element’s reference to the first stream in the track
-const onTrack = (event, peerUserId) => {
+const onTrack = async (event, peerUserId) => {
   let remoteContainer = document.getElementById(`${peerUserId}_media`);
   if (!remoteContainer) {
     // create video element for the peer
     const username = connectedPeersOptions[peerUserId].username;
     const constraints = connectedPeersOptions[peerUserId].constraints;
     if (connectedPeersOptions[peerUserId]) {
-      remoteContainer = createMediaContainer(peerUserId, event.streams[0], username);
+      remoteContainer = createMediaContainer(
+        peerUserId,
+        event.streams[0],
+        username
+      );
     } else {
-      remoteContainer = createMediaContainer(peerUserId, event.streams[0], 'Remote');
+      remoteContainer = createMediaContainer(
+        peerUserId,
+        event.streams[0],
+        'Remote'
+      );
     }
     mediaContainers.prepend(remoteContainer);
     adjustContainers(mediaContainers, remoteContainer, 'addContainer');
     if (constraints) {
-      toggleMediaNotice('audio', constraints, peerUserId);
-      toggleMediaNotice('video', constraints, peerUserId);
+      await toggleMediaNotice('audio', constraints, peerUserId);
+      await toggleMediaNotice('video', constraints, peerUserId);
     }
     infoSection.classList.add('hide');
     infoSection.classList.remove('show');

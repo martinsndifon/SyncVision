@@ -36,12 +36,13 @@ def handle_my_custom_event(data):
 # Store users request SIDs
 clients = {}
 
+
 @socketio.on('mediaOption')
 def distributeMediaOptions(data):
-    data['from'] = request.sid
+    data['from'] = request.sid  # type: ignore
     room = data['roomId']
     del data['roomId']
-    send(data, to=room, skip_sid=request.sid)
+    send(data, to=room, skip_sid=request.sid)  # type: ignore
 
 
 @socketio.on('mediaOptionReply')
@@ -50,12 +51,14 @@ def distributeMediaOptionsReply(data):
     to = data['to']
     send(data, to=to)
 
+
 @socketio.on('mediaOptionChange')
 def distributeMediaOptionChange(data):
     """Distributes the mediaOptionChange event"""
     room = data['roomId']
     del data['roomId']
-    send(data, to=room, skip_sid=request.sid)
+    send(data, to=room, skip_sid=request.sid)  # type: ignore
+
 
 @socketio.on('join')
 def on_join(data):
@@ -64,11 +67,8 @@ def on_join(data):
     username = session['username']
     room = data['room']
     join_room(room)
-    # if room not in room_users:
-    #     room_users[room] = []
-    # if userId not in room_users[room]:
-    #     room_users[room].append(userId)
 
+    # cache room users in redis
     if not cache.exists(room):
         store_user_in_room(room, 'admin')
 
@@ -94,23 +94,15 @@ def on_leave(data):
     userId = data['userId']
     username = data['username']
     room = data['room']
-    # if room in room_users and userId in room_users[room]:
-    #     print('removing user id')
-    #     room_users[room].remove(userId)
 
+    # Remove user from room
     remove_user_from_room(room, userId)
 
-    # Delete room if no users are left inside
-    # if len(room_users[room]) == 0:
-    #     print('deleting empty room')
-    #     del room_users[room]
     if get_users_in_room(room) == 1:
-        print('set the expiration')
         # Set an expiration of 24 hours for the room key
         cache.expire(room, 24 * 3600)
         ttl = cache.ttl(room)
-        print(f'Time to live for {room}: {ttl} seconds')
-    print('Passed the set expiration check')
+
     # Delete the client's request SID
     if userId in clients[room]:
         del clients[room][userId]
@@ -142,8 +134,6 @@ def transfer_data(message):
     user_id = message['userId']
     data = message['data']
     data['userId'] = user_id
-    # print('DataEvent: {} is sending the data:\n {}\n to {}'.format(
-    #    user_id, data, peer_user_id))
     emit('data', data, to=peer_to_send)
 
 
