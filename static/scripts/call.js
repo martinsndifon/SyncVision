@@ -16,8 +16,8 @@ const socket = io({ autoConnect: false });
 const connectedPeers = {};
 const connectedPeersOptions = {};
 
-screeenShare.addEventListener('click', (e) => {
-  flashMessage('soon to be Implemented...');
+screeenShare.addEventListener('click', async () => {
+  flashMessage('Soon to be implemented...');
 });
 
 audioToggle.addEventListener('click', toggleAudio);
@@ -286,6 +286,7 @@ const startConnection = async () => {
       await toggleMediaNotice('video', constraints, 'local');
       const audioTracks = localStream.getAudioTracks();
       const videoTracks = localStream.getVideoTracks();
+
       audioTracks.forEach((track) => {
         track.enabled = constraints.audio;
         if (track.enabled) {
@@ -312,7 +313,7 @@ const startConnection = async () => {
       });
       socket.emit('join', { room: roomId });
     })
-    .catch(() => {
+    .catch(async () => {
       flashMessage('Give permission to media devices', 'error');
     });
 };
