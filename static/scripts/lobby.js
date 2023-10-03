@@ -21,7 +21,9 @@ let init = async () => {
     })
     .then((stream) => {
       localStream = stream;
-      document.getElementById('localVideo').srcObject = localStream;
+      const video = document.getElementById('localVideo');
+      video.srcObject = localStream;
+      video.muted = true;
       mic.disabled = false;
       camera.disabled = false;
     });

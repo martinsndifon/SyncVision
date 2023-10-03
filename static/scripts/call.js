@@ -16,8 +16,8 @@ const socket = io({ autoConnect: false });
 const connectedPeers = {};
 const connectedPeersOptions = {};
 
-screeenShare.addEventListener('click', (e) => {
-  flashMessage('soon to be Implemented...');
+screeenShare.addEventListener('click', async () => {
+  await flashMessage('Soon to be implemented...');
 });
 
 audioToggle.addEventListener('click', toggleAudio);
@@ -176,7 +176,7 @@ socket.on('message', async (message) => {
   } else if (message.type == 'join') {
     infoSection.classList.remove('show');
     infoSection.classList.add('hide');
-    flashMessage(`${message.username} joined`);
+    await flashMessage(`${message.username} joined`);
   } else if (message.type == 'mediaOption') {
     // Receives the media Options
     connectedPeersOptions[message.userId] = {
@@ -216,11 +216,11 @@ socket.on('message', async (message) => {
       infoSection.classList.remove('hide');
       infoSection.classList.add('show');
     }
-    flashMessage(`${message.username} left`);
+    await flashMessage(`${message.username} left`);
   }
 });
 
-function flashMessage(message, type) {
+async function flashMessage(message, type) {
   if (type) {
     const flashMessage = document.getElementById('flash-message');
     flashMessage.textContent = message;
@@ -260,7 +260,7 @@ const startConnection = async () => {
     .getUserMedia({ audio: true, video: true })
     .then(async (stream) => {
       localStream = stream;
-      const mediaContainerData = createMediaContainer(
+      const mediaContainerData = await createMediaContainer(
         'local',
         localStream,
         username
@@ -286,6 +286,7 @@ const startConnection = async () => {
       await toggleMediaNotice('video', constraints, 'local');
       const audioTracks = localStream.getAudioTracks();
       const videoTracks = localStream.getVideoTracks();
+
       audioTracks.forEach((track) => {
         track.enabled = constraints.audio;
         if (track.enabled) {
@@ -310,10 +311,10 @@ const startConnection = async () => {
           videoToggle.children[0].innerText = 'videocam_off';
         }
       });
-      socket.emit('join', { room: roomId });
+      await socket.emit('join', { room: roomId });
     })
-    .catch(() => {
-      flashMessage('Give permission to media devices', 'error');
+    .catch(async () => {
+      await flashMessage('Give permission to media devices', 'error');
     });
 };
 
@@ -335,13 +336,13 @@ const onTrack = async (event, peerUserId) => {
     const username = connectedPeersOptions[peerUserId].username;
     const constraints = connectedPeersOptions[peerUserId].constraints;
     if (connectedPeersOptions[peerUserId]) {
-      remoteContainer = createMediaContainer(
+      remoteContainer = await createMediaContainer(
         peerUserId,
         event.streams[0],
         username
       );
     } else {
-      remoteContainer = createMediaContainer(
+      remoteContainer = await createMediaContainer(
         peerUserId,
         event.streams[0],
         'Remote'
