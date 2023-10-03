@@ -5,7 +5,7 @@ if (navigator.userAgentData.mobile) {
   screenContainer.classList.add('no_visible');
 }
 
-function createMediaContainer(peerId, stream, username) {
+async function createMediaContainer(peerId, stream, username) {
   const container = document.createElement('div');
   container.className = 'media_container';
   if (peerId == 'local') {
@@ -49,6 +49,16 @@ function createMediaContainer(peerId, stream, username) {
   }
   mediaAlt.append(p);
   container.append(mediaAlt);
+
+  // Add the name of the user to their video container
+  const displayName = document.createElement('p');
+  displayName.id = 'displayName';
+  if (name.length > 1) {
+    displayName.innerText = `${name[0]} ${name[1]}`;
+  } else {
+    displayName.innerText = name[0];
+  }
+  container.append(displayName);
 
   if (peerId == 'local') {
     video.muted = true;
