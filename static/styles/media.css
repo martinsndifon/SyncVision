@@ -13,11 +13,11 @@
 body {
   height: 100vh;
   background-color: #f8f0fc;
-  overflow: hidden;
 }
 
 main {
   height: 100%;
+  overflow: hidden;
 }
 
 button {
