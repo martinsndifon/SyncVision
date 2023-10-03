@@ -13,6 +13,7 @@
 body {
   height: 100vh;
   background-color: #f8f0fc;
+  overflow: hidden;
 }
 
 main {
@@ -319,8 +320,8 @@ aside {
 /* Flash message section*/
 .flash-message {
   position: fixed;
-  bottom: 3rem;
-  left: 15%;
+  bottom: 5rem;
+  left: 50%;
   transform: translateX(-50%);
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
@@ -443,6 +444,11 @@ aside {
     flex-basis: 29%;
     height: 43%;
     max-width: 29%;
+  }
+
+  .flash-message {
+    bottom: 3rem;
+    left: 15%;
   }
 }
 
