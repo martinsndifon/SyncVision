@@ -118,11 +118,7 @@ video {
 
 .controls {
   padding-inline: 1rem;
-  /* height: 10vh; */
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  height: 10vh;
   display: flex;
 }
 
