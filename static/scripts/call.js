@@ -17,7 +17,7 @@ const connectedPeers = {};
 const connectedPeersOptions = {};
 
 screeenShare.addEventListener('click', async () => {
-  await flashMessage('Soon to be implemented...');
+  flashMessage('Soon to be implemented...');
 });
 
 audioToggle.addEventListener('click', toggleAudio);
@@ -176,7 +176,7 @@ socket.on('message', async (message) => {
   } else if (message.type == 'join') {
     infoSection.classList.remove('show');
     infoSection.classList.add('hide');
-    await flashMessage(`${message.username} joined`);
+    flashMessage(`${message.username} joined`);
   } else if (message.type == 'mediaOption') {
     // Receives the media Options
     connectedPeersOptions[message.userId] = {
@@ -216,11 +216,11 @@ socket.on('message', async (message) => {
       infoSection.classList.remove('hide');
       infoSection.classList.add('show');
     }
-    await flashMessage(`${message.username} left`);
+    flashMessage(`${message.username} left`);
   }
 });
 
-async function flashMessage(message, type) {
+function flashMessage(message, type) {
   if (type) {
     const flashMessage = document.getElementById('flash-message');
     flashMessage.textContent = message;
@@ -260,7 +260,7 @@ const startConnection = async () => {
     .getUserMedia({ audio: true, video: true })
     .then(async (stream) => {
       localStream = stream;
-      const mediaContainerData = await createMediaContainer(
+      const mediaContainerData = createMediaContainer(
         'local',
         localStream,
         username
@@ -311,10 +311,10 @@ const startConnection = async () => {
           videoToggle.children[0].innerText = 'videocam_off';
         }
       });
-      await socket.emit('join', { room: roomId });
+      socket.emit('join', { room: roomId });
     })
     .catch(async () => {
-      await flashMessage('Give permission to media devices', 'error');
+      flashMessage('Give permission to media devices', 'error');
     });
 };
 
@@ -336,13 +336,13 @@ const onTrack = async (event, peerUserId) => {
     const username = connectedPeersOptions[peerUserId].username;
     const constraints = connectedPeersOptions[peerUserId].constraints;
     if (connectedPeersOptions[peerUserId]) {
-      remoteContainer = await createMediaContainer(
+      remoteContainer = createMediaContainer(
         peerUserId,
         event.streams[0],
         username
       );
     } else {
-      remoteContainer = await createMediaContainer(
+      remoteContainer = createMediaContainer(
         peerUserId,
         event.streams[0],
         'Remote'

@@ -5,7 +5,7 @@ if (navigator.userAgentData.mobile) {
   screenContainer.classList.add('no_visible');
 }
 
-async function createMediaContainer(peerId, stream, username) {
+function createMediaContainer(peerId, stream, username) {
   const container = document.createElement('div');
   container.className = 'media_container';
   if (peerId == 'local') {
