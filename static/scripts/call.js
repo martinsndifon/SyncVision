@@ -260,7 +260,7 @@ const startConnection = async () => {
     .getUserMedia({ audio: true, video: true })
     .then(async (stream) => {
       localStream = stream;
-      const mediaContainerData = createMediaContainer(
+      const mediaContainerData = await createMediaContainer(
         'local',
         localStream,
         username
@@ -336,13 +336,13 @@ const onTrack = async (event, peerUserId) => {
     const username = connectedPeersOptions[peerUserId].username;
     const constraints = connectedPeersOptions[peerUserId].constraints;
     if (connectedPeersOptions[peerUserId]) {
-      remoteContainer = createMediaContainer(
+      remoteContainer = await createMediaContainer(
         peerUserId,
         event.streams[0],
         username
       );
     } else {
-      remoteContainer = createMediaContainer(
+      remoteContainer = await createMediaContainer(
         peerUserId,
         event.streams[0],
         'Remote'
@@ -361,14 +361,31 @@ const onTrack = async (event, peerUserId) => {
 
 // Create a new peer connection
 const createPeerConnection = async (peerUserId) => {
-  // Calling the REST API TO fetch the TURN Server Credentials from openrelay
-  const response = await fetch(
-    'https://syncvision.metered.live/api/v1/turn/credentials?apiKey=d608f49a9ecfc62d0cfe0cfcc0c5563f7f02'
-  );
-  const iceServers = await response.json();
   try {
     const pc = new RTCPeerConnection({
-      iceServers: iceServers,
+      iceServers: [
+        { urls: 'stun:stun.relay.metered.ca:80' },
+        {
+          urls: 'turn:a.relay.metered.ca:80',
+          username: '79c61b5b13489486fdecdb80',
+          credential: 'BRFMDnKhz0H/fV6Z',
+        },
+        {
+          urls: 'turn:a.relay.metered.ca:80?transport=tcp',
+          username: '79c61b5b13489486fdecdb80',
+          credential: 'BRFMDnKhz0H/fV6Z',
+        },
+        {
+          urls: 'turn:a.relay.metered.ca:443',
+          username: '79c61b5b13489486fdecdb80',
+          credential: 'BRFMDnKhz0H/fV6Z',
+        },
+        {
+          urls: 'turn:a.relay.metered.ca:443?transport=tcp',
+          username: '79c61b5b13489486fdecdb80',
+          credential: 'BRFMDnKhz0H/fV6Z',
+        },
+      ],
     });
     pc.onicecandidate = (event) => onIceCandidate(event, peerUserId);
     pc.ontrack = (event) => onTrack(event, peerUserId);
