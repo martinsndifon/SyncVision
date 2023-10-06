@@ -16,8 +16,9 @@ The WebRTC Video Conferencing App (syncvision) is a real-time video and audio co
 ### Technologies Used
 
 - **WebRTC**: Enables real-time audio and video communication directly in web browsers.
-- **Flask**: A Python web framework used for building the backend signalling server.
+- **Websockets**: Enables bidirectional communication between clients and the server.
 - **Socket.IO**: Provides real-time communication between the server and clients.
+- **Flask**: A Python web framework used for building the backend signalling server.
 - **HTML/CSS/JavaScript**: Frontend development.
 - **Open-relay**: A third party STUN/TURN server used.
 - **Redis**: Used to cache meeting and users session data for effective session management.
@@ -27,6 +28,12 @@ The WebRTC Video Conferencing App (syncvision) is a real-time video and audio co
 
 https://syncvision.live <br>
 Create or join a conference room and start a video conference.
+
+### Known bugs
+
+An unidentified bug occasionally disrupts the transmission of video/audio media from a newly joined user to the other users in the room. <br>
+<span style="color:red">A simple page refresh fixes this issue for now</span> <br>
+We are actively pursuing the underlying cause of the issue and are committed to developing a lasting solution.
 
 ### Contributing
 
