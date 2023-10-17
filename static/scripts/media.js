@@ -111,11 +111,13 @@ async function toggleMediaNotice(media, constraints, peerId) {
   }
 }
 
-function adjustContainers(mediaContainers, remoteContainer, type) {
+function adjustContainers(mediaContainers, remoteContainer, type, screenSharing) {
   const local = document.getElementById('local_media');
   if (type == 'addContainer') {
     if (mediaContainers.children.length == 2) {
-      local.classList.add('local_one_container');
+      if (!screenSharing) {
+        local.classList.add('local_one_container');
+      }
       local.classList.remove('one_container');
       remoteContainer.classList.add('one_container');
     } else if (mediaContainers.children.length > 2) {
@@ -134,10 +136,61 @@ function adjustContainers(mediaContainers, remoteContainer, type) {
       Array.from(mediaContainers.children).forEach((container) => {
         if (container.id != 'local_media') {
           container.classList.add('one_container');
+        } else {
+          local.classList.remove('one_container');
+          if (!screenSharing) {
+            local.classList.add('local_one_container');
+          }
         }
       });
-      local.classList.remove('one_container');
-      local.classList.add('local_one_container');
     }
+  }
+}
+
+async function updateSDP(connection, setAndSendLocalDescription) {
+  const [peerId, peerConnection] = connection;
+  await peerConnection.createOffer()
+  .then((sessionDescription) => {
+    setAndSendLocalDescription(peerId, sessionDescription);
+  })
+  .catch((error) => {
+    console.log(error);
+  })
+}
+
+async function createScreenShare(sharerId, stream) {
+  const video = document.createElement('video');
+  video.id = `sharer_${sharerId}`;
+  video.setAttribute('autoplay', true);
+  video.setAttribute('playsinline', true);
+  video.srcObject = stream;
+  return video;
+}
+
+async function addScreenStyles() {
+  const mediaGrid = document.getElementById('media_grid');
+  const mediaContainers = document.getElementById('media_containers');
+  const screenContainer = document.getElementById('screen_container');
+  mediaGrid.classList.add('screen_active');
+  screenContainer.classList.add('active');
+  mediaContainers.classList.add('screen_active_media_containers');
+
+  const local = document.getElementById('local_media');
+  if (mediaContainers.children.length == 2) {
+    local.classList.remove('local_one_container');
+  }
+}
+
+async function undoScreenStyles() {
+  const mediaGrid = document.getElementById('media_grid');
+  const mediaContainers = document.getElementById('media_containers');
+  const screenContainer = document.getElementById('screen_container');
+  mediaGrid.classList.remove('screen_active');
+  screenContainer.classList.remove('active');
+  mediaContainers.classList.remove('screen_active_media_containers');
+
+  const local = document.getElementById('local_media');
+  if (mediaContainers.children.length == 2) {
+    local.classList.add('local_one_container');
   }
 }
