@@ -476,4 +476,38 @@ aside {
     height: 48%;
     max-width: 29%;
   }
+
+  .media_grid.screen_active {
+    margin-inline: 1rem;
+    gap: 0.5rem;
+  }
+  .screen.active {
+    width: 80%;
+    border-radius: 4px;
+    height: 100%;
+    padding: 2rem 0;
+    position: relative;
+  }
+  .screen.active video {
+    object-fit: contain;
+  }
+  .media_containers.screen_active_media_containers {
+    width: 20%;
+    display: block;
+  }
+
+  .media_containers.screen_active_media_containers .media_container {
+    max-width: 90%;
+    height: 30%;
+  }
+
+  .media_containers.screen_active_media_containers .media_container + .media_container {
+    margin-top: 1.5rem;
+  }
+
+  .media_containers.screen_active_media_containers .media_container .media_alt p {
+    width: 100px;
+    height: 100px;
+  }
+
 }
