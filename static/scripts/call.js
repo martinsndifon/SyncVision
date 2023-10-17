@@ -23,45 +23,47 @@ let screenTracks = [];
 let remoteScreenStreamId;
 
 screeenShare.addEventListener('click', async () => {
-  if (screenSharing && (screenSharing.peerId != userId)) {
+  if (screenSharing && screenSharing.peerId != userId) {
     const peerName = connectedPeersOptions[screenSharing.peerId].username;
-    flashMessage(`${peerName} is currently sharing their screen.`);
+    flashMessage(`${peerName} is currently sharing their screen.`, 'error');
     return;
   } else if (screenSharing.peerId === userId) {
-    console.log('ending screen share...')
+    console.log('ending screen share...');
     //end the screen sharing and return;
     // send screen stream end event
     await socket.emit('screenStreamEnd', {
       roomId: roomId,
-      screen: 'end'
-    })
+      screen: 'end',
+    });
     // Undo the screen share styles
     await undoScreenStyles();
     screenContainer.replaceChildren();
     screenSharing = false;
-    screenStream.getTracks().forEach(track => track.stop());
+    screenStream.getTracks().forEach((track) => track.stop());
     return;
   }
 
   try {
-    screenStream = await navigator.mediaDevices.getDisplayMedia({video: true});
+    screenStream = await navigator.mediaDevices.getDisplayMedia({
+      video: true,
+    });
     screenTracks = screenStream.getTracks();
     // Event for when the user stops sharing there screen by clicking stop sharing
     screenTracks[0].addEventListener('ended', async () => {
-      console.log('ending screen share...')
+      console.log('ending screen share...');
       //end the screen sharing and return;
       // send screen stream end event
       await socket.emit('screenStreamEnd', {
         roomId: roomId,
-        screen: 'end'
-      })
+        screen: 'end',
+      });
       // Undo the screen share styles
       await undoScreenStyles();
       screenContainer.replaceChildren();
       screenSharing = false;
-    })
-   
-    screenSharing = {peerId: userId};
+    });
+
+    screenSharing = { peerId: userId };
 
     // Adds styling for screen sharing
     const video = await createScreenShare(userId, screenStream);
@@ -72,8 +74,8 @@ screeenShare.addEventListener('click', async () => {
     await socket.emit('streamId', {
       streamId: screenStream.id,
       to: roomId,
-      peerId: userId
-    })
+      peerId: userId,
+    });
 
     // If there are any peer connections, add the tracks to them
     const connections = Object.entries(connectedPeers);
@@ -85,7 +87,7 @@ screeenShare.addEventListener('click', async () => {
           const peerConnection = connection[1];
           peerConnection.addTrack(track, screenStream);
         }
-        
+
         await updateSDP(connection, setAndSendLocalDescription);
       }
     }
@@ -206,13 +208,13 @@ const emitLeaveEvent = async () => {
       room: roomId,
       username: username,
     },
-    async (data) => {
-      if (screenSharing) {
-        screenStream.getTracks().forEach(track => track.stop());
+    async () => {
+      if (screenSharing && screenSharing.peerId === userId) {
+        screenStream.getTracks().forEach((track) => track.stop());
         await socket.emit('screenStreamEnd', {
           roomId: roomId,
-          screen: 'end'
-        })
+          screen: 'end',
+        });
       }
       await hangup();
       window.removeEventListener('beforeunload', emitLeaveEvent);
@@ -231,7 +233,7 @@ window.addEventListener('beforeunload', emitLeaveEvent);
 window.addEventListener('unload', emitLeaveEvent);
 
 socket.on('connect', function () {
-  socket.emit('connected', { room: roomId});
+  socket.emit('connected', { room: roomId });
 });
 
 socket.on('message', async (message) => {
@@ -284,25 +286,25 @@ socket.on('message', async (message) => {
     connectedPeersOptions[message.userId].constraints = message.constraints;
     await toggleMediaNotice('audio', message.constraints, message.userId);
     await toggleMediaNotice('video', message.constraints, message.userId);
-  }else if (message.type == 'connected') {
+  } else if (message.type == 'connected') {
     // When a new user connects successfully, If screen sharing is on, send the stream Id
-    if (screenSharing && (screenSharing.peerId == userId)) {
+    if (screenSharing && screenSharing.peerId == userId) {
       await socket.emit('streamId', {
         to: message.from,
         streamId: screenStream.id,
-        peerId: userId
-      })
+        peerId: userId,
+      });
     }
   } else if (message.type == 'streamId') {
     remoteScreenStreamId = message.streamId;
-    screenSharing = {peerId: message.peerId};
+    screenSharing = { peerId: message.peerId };
   } else if (message.type == 'screenStreamEnd') {
     console.log('ending screen stream');
     // Undo screen sharing styles
     await undoScreenStyles();
     screenContainer.replaceChildren();
     screenSharing = false;
-  }else {
+  } else {
     // On 'leave', remove the user video element and their connection object
     const peerUserId = message.userId;
     let remoteVideo = document.getElementById(`${peerUserId}_media`);
@@ -449,7 +451,12 @@ const onTrack = async (event, peerUserId) => {
       );
     }
     mediaContainers.prepend(remoteContainer);
-    adjustContainers(mediaContainers, remoteContainer, 'addContainer', screenSharing);
+    adjustContainers(
+      mediaContainers,
+      remoteContainer,
+      'addContainer',
+      screenSharing
+    );
     if (constraints) {
       await toggleMediaNotice('audio', constraints, peerUserId);
       await toggleMediaNotice('video', constraints, peerUserId);
@@ -458,7 +465,10 @@ const onTrack = async (event, peerUserId) => {
     infoSection.classList.remove('show');
   } else if (event.streams[0].id === remoteScreenStreamId) {
     // create and append stream
-    const video = await createScreenShare(screenSharing.peerId, event.streams[0]);
+    const video = await createScreenShare(
+      screenSharing.peerId,
+      event.streams[0]
+    );
     // Adjust the styles for screen sharing.
     await addScreenStyles();
     screenContainer.append(video);
@@ -504,8 +514,6 @@ const createPeerConnection = async (peerUserId) => {
         pc.addTrack(track, screenStream);
       }
     }
-
-
 
     // console.log('PeerConnection created');
     return pc;
