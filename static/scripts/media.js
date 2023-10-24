@@ -111,7 +111,12 @@ async function toggleMediaNotice(media, constraints, peerId) {
   }
 }
 
-function adjustContainers(mediaContainers, remoteContainer, type, screenSharing) {
+function adjustContainers(
+  mediaContainers,
+  remoteContainer,
+  type,
+  screenSharing
+) {
   const local = document.getElementById('local_media');
   if (type == 'addContainer') {
     if (mediaContainers.children.length == 2) {
@@ -149,13 +154,14 @@ function adjustContainers(mediaContainers, remoteContainer, type, screenSharing)
 
 async function updateSDP(connection, setAndSendLocalDescription) {
   const [peerId, peerConnection] = connection;
-  await peerConnection.createOffer()
-  .then((sessionDescription) => {
-    setAndSendLocalDescription(peerId, sessionDescription);
-  })
-  .catch((error) => {
-    console.log(error);
-  })
+  await peerConnection
+    .createOffer()
+    .then((sessionDescription) => {
+      setAndSendLocalDescription(peerId, sessionDescription);
+    })
+    .catch((error) => {
+      // console.error(error);
+    });
 }
 
 async function createScreenShare(sharerId, stream) {

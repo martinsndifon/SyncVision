@@ -28,7 +28,6 @@ screeenShare.addEventListener('click', async () => {
     flashMessage(`${peerName} is currently sharing their screen.`, 'error');
     return;
   } else if (screenSharing.peerId === userId) {
-    console.log('ending screen share...');
     //end the screen sharing and return;
     // send screen stream end event
     await socket.emit('screenStreamEnd', {
@@ -50,7 +49,6 @@ screeenShare.addEventListener('click', async () => {
     screenTracks = screenStream.getTracks();
     // Event for when the user stops sharing there screen by clicking stop sharing
     screenTracks[0].addEventListener('ended', async () => {
-      console.log('ending screen share...');
       //end the screen sharing and return;
       // send screen stream end event
       await socket.emit('screenStreamEnd', {
@@ -79,11 +77,9 @@ screeenShare.addEventListener('click', async () => {
 
     // If there are any peer connections, add the tracks to them
     const connections = Object.entries(connectedPeers);
-    console.log(connections);
     if (connections.length > 0) {
       for (const connection of connections) {
         for (const track of screenTracks) {
-          console.log('adding tracks');
           const peerConnection = connection[1];
           peerConnection.addTrack(track, screenStream);
         }
@@ -299,7 +295,6 @@ socket.on('message', async (message) => {
     remoteScreenStreamId = message.streamId;
     screenSharing = { peerId: message.peerId };
   } else if (message.type == 'screenStreamEnd') {
-    console.log('ending screen stream');
     // Undo screen sharing styles
     await undoScreenStyles();
     screenContainer.replaceChildren();
@@ -514,8 +509,6 @@ const createPeerConnection = async (peerUserId) => {
         pc.addTrack(track, screenStream);
       }
     }
-
-    // console.log('PeerConnection created');
     return pc;
   } catch (error) {
     // console.error('PeerConnection failed: ', error);
