@@ -11,7 +11,7 @@ const videoToggle = document.getElementById('videotoggle');
 const placeholderText = document.getElementById('placeholder-text');
 const infoSection = document.getElementById('info-section');
 const notice = document.getElementById('notice');
-const screeenShare = document.getElementById('share_screen_btn');
+const screenShare = document.getElementById('share_screen_btn');
 
 const socket = io({ autoConnect: false });
 const connectedPeers = {};
@@ -22,7 +22,7 @@ let screenTracks = [];
 // screen Media Stream Id
 let remoteScreenStreamId;
 
-screeenShare.addEventListener('click', async () => {
+screenShare.addEventListener('click', async () => {
   if (screenSharing && screenSharing.peerId != userId) {
     const peerName = connectedPeersOptions[screenSharing.peerId].username;
     flashMessage(`${peerName} is currently sharing their screen.`, 'error');
@@ -39,6 +39,7 @@ screeenShare.addEventListener('click', async () => {
     screenContainer.replaceChildren();
     screenSharing = false;
     screenStream.getTracks().forEach((track) => track.stop());
+    screenShare.classList.remove('active-screen');
     return;
   }
 
@@ -46,6 +47,7 @@ screeenShare.addEventListener('click', async () => {
     screenStream = await navigator.mediaDevices.getDisplayMedia({
       video: true,
     });
+    screenShare.classList.add('active-screen');
     screenTracks = screenStream.getTracks();
     // Event for when the user stops sharing there screen by clicking stop sharing
     screenTracks[0].addEventListener('ended', async () => {
@@ -59,6 +61,7 @@ screeenShare.addEventListener('click', async () => {
       await undoScreenStyles();
       screenContainer.replaceChildren();
       screenSharing = false;
+      screenShare.classList.remove('active-screen');
     });
 
     screenSharing = { peerId: userId };
