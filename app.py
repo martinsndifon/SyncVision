@@ -26,11 +26,28 @@ def not_found(error):
     """Handle errors and serves the 404 page"""
     return render_template('404.html')
 
+@socketio.on('screenStreamEnd')
+def endScreenStream(data):
+    """Emits the screenStreamEnd event to end the screen stream"""
+    message = {'type': 'screenStreamEnd'}
+    send(message, to=data['roomId'], skip_sid=request.sid)
+
+@socketio.on('streamId')
+def sendScreenStreamId(data):
+    """Sends the screen sharing media Stream Id"""
+    message = {'streamId': data['streamId']}
+    message['type'] = 'streamId'
+    message['peerId'] = data['peerId']
+    send(message, to=data['to'], skip_sid=request.sid)
 
 @socketio.on('connected')
 def handle_my_custom_event(data):
     """Confirm socketio connection"""
     print('Received ', data)
+    message = {'type': 'connected'}
+    message['from'] = request.sid # type: ignore
+    room = data['room']
+    send(message, to=room, skip_sid=request.sid)  # type: ignore
 
 
 # Store users request SIDs

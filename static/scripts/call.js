@@ -1,6 +1,7 @@
 'use strict';
 
 const mediaContainers = document.getElementById('media_containers');
+const screenContainer = document.getElementById('screen_container');
 const messageBox = document.getElementById('chat-messages');
 const sendbutton = document.getElementById('sendMessageButton');
 const messageInput = document.getElementById('messageInput');
@@ -10,14 +11,92 @@ const videoToggle = document.getElementById('videotoggle');
 const placeholderText = document.getElementById('placeholder-text');
 const infoSection = document.getElementById('info-section');
 const notice = document.getElementById('notice');
-const screeenShare = document.getElementById('share_screen_btn');
+const screenShare = document.getElementById('share_screen_btn');
+const userCount = document.getElementById('user-count');
 
 const socket = io({ autoConnect: false });
 const connectedPeers = {};
 const connectedPeersOptions = {};
+let screenSharing = false;
+let screenStream;
+let screenTracks = [];
+// screen Media Stream Id
+let remoteScreenStreamId;
+// user count
+let count = 1;
 
-screeenShare.addEventListener('click', async () => {
-  flashMessage('Soon to be implemented...');
+screenShare.addEventListener('click', async () => {
+  if (screenSharing && screenSharing.peerId != userId) {
+    const peerName = connectedPeersOptions[screenSharing.peerId].username;
+    flashMessage(`${peerName} is currently sharing their screen.`, 'error');
+    return;
+  } else if (screenSharing.peerId === userId) {
+    //end the screen sharing and return;
+    // send screen stream end event
+    await socket.emit('screenStreamEnd', {
+      roomId: roomId,
+      screen: 'end',
+    });
+    // Undo the screen share styles
+    await undoScreenStyles();
+    screenContainer.replaceChildren();
+    screenSharing = false;
+    screenStream.getTracks().forEach((track) => track.stop());
+    screenShare.classList.remove('active-screen');
+    return;
+  }
+
+  try {
+    screenStream = await navigator.mediaDevices.getDisplayMedia({
+      video: true,
+    });
+    screenShare.classList.add('active-screen');
+    screenTracks = screenStream.getTracks();
+    // Event for when the user stops sharing there screen by clicking stop sharing
+    screenTracks[0].addEventListener('ended', async () => {
+      //end the screen sharing and return;
+      // send screen stream end event
+      await socket.emit('screenStreamEnd', {
+        roomId: roomId,
+        screen: 'end',
+      });
+      // Undo the screen share styles
+      await undoScreenStyles();
+      screenContainer.replaceChildren();
+      screenSharing = false;
+      screenShare.classList.remove('active-screen');
+    });
+
+    screenSharing = { peerId: userId };
+
+    // Adds styling for screen sharing
+    const video = await createScreenShare(userId, screenStream);
+    screenContainer.append(video);
+    await addScreenStyles();
+
+    // send the streamId
+    await socket.emit('streamId', {
+      streamId: screenStream.id,
+      to: roomId,
+      peerId: userId,
+    });
+
+    // If there are any peer connections, add the tracks to them
+    const connections = Object.entries(connectedPeers);
+    if (connections.length > 0) {
+      for (const connection of connections) {
+        for (const track of screenTracks) {
+          const peerConnection = connection[1];
+          peerConnection.addTrack(track, screenStream);
+        }
+
+        await updateSDP(connection, setAndSendLocalDescription);
+      }
+    }
+    // attach a video element to the screen_container and attach the stream. Add the necessary styles
+  } catch (e) {
+    //Do nothing if user fails to grant permission.
+  }
 });
 
 audioToggle.addEventListener('click', toggleAudio);
@@ -131,7 +210,14 @@ const emitLeaveEvent = async () => {
       room: roomId,
       username: username,
     },
-    async (data) => {
+    async () => {
+      if (screenSharing && screenSharing.peerId === userId) {
+        screenStream.getTracks().forEach((track) => track.stop());
+        await socket.emit('screenStreamEnd', {
+          roomId: roomId,
+          screen: 'end',
+        });
+      }
       await hangup();
       window.removeEventListener('beforeunload', emitLeaveEvent);
       window.removeEventListener('unload', emitLeaveEvent);
@@ -149,7 +235,7 @@ window.addEventListener('beforeunload', emitLeaveEvent);
 window.addEventListener('unload', emitLeaveEvent);
 
 socket.on('connect', function () {
-  socket.emit('connected', { data: 'Connected so signalling server!' });
+  socket.emit('connected', { room: roomId });
 });
 
 socket.on('message', async (message) => {
@@ -202,6 +288,23 @@ socket.on('message', async (message) => {
     connectedPeersOptions[message.userId].constraints = message.constraints;
     await toggleMediaNotice('audio', message.constraints, message.userId);
     await toggleMediaNotice('video', message.constraints, message.userId);
+  } else if (message.type == 'connected') {
+    // When a new user connects successfully, If screen sharing is on, send the stream Id
+    if (screenSharing && screenSharing.peerId == userId) {
+      await socket.emit('streamId', {
+        to: message.from,
+        streamId: screenStream.id,
+        peerId: userId,
+      });
+    }
+  } else if (message.type == 'streamId') {
+    remoteScreenStreamId = message.streamId;
+    screenSharing = { peerId: message.peerId };
+  } else if (message.type == 'screenStreamEnd') {
+    // Undo screen sharing styles
+    await undoScreenStyles();
+    screenContainer.replaceChildren();
+    screenSharing = false;
   } else {
     // On 'leave', remove the user video element and their connection object
     const peerUserId = message.userId;
@@ -209,8 +312,11 @@ socket.on('message', async (message) => {
     if (remoteVideo) {
       remoteVideo.remove();
     }
-    adjustContainers(mediaContainers, null, 'reAdjustContainer');
+    adjustContainers(mediaContainers, null, 'reAdjustContainer', screenSharing);
     delete connectedPeers[peerUserId];
+    // update count
+    count -= 1;
+    userCount.innerText = count;
 
     if (Object.keys(connectedPeers).length === 0) {
       infoSection.classList.remove('hide');
@@ -312,6 +418,7 @@ const startConnection = async () => {
         }
       });
       socket.emit('join', { room: roomId });
+      userCount.innerText = count;
     })
     .catch(async () => {
       flashMessage('Give permission to media devices', 'error');
@@ -349,13 +456,27 @@ const onTrack = async (event, peerUserId) => {
       );
     }
     mediaContainers.prepend(remoteContainer);
-    adjustContainers(mediaContainers, remoteContainer, 'addContainer');
+    adjustContainers(
+      mediaContainers,
+      remoteContainer,
+      'addContainer',
+      screenSharing
+    );
     if (constraints) {
       await toggleMediaNotice('audio', constraints, peerUserId);
       await toggleMediaNotice('video', constraints, peerUserId);
     }
     infoSection.classList.add('hide');
     infoSection.classList.remove('show');
+  } else if (event.streams[0].id === remoteScreenStreamId) {
+    // create and append stream
+    const video = await createScreenShare(
+      screenSharing.peerId,
+      event.streams[0]
+    );
+    // Adjust the styles for screen sharing.
+    await addScreenStyles();
+    screenContainer.append(video);
   }
 };
 
@@ -392,7 +513,12 @@ const createPeerConnection = async (peerUserId) => {
     for (const track of localStream.getTracks()) {
       pc.addTrack(track, localStream);
     }
-    // console.log('PeerConnection created');
+    // Add screen sharing tracks if any
+    if (screenTracks.length > 0) {
+      for (const track of screenTracks) {
+        pc.addTrack(track, screenStream);
+      }
+    }
     return pc;
   } catch (error) {
     // console.error('PeerConnection failed: ', error);
@@ -421,9 +547,20 @@ const setAndSendLocalDescription = (peerUserId, sessionDescription) => {
 
 // Create and send offer to other peer(s) setting local description
 const sendOffer = async (peerUserId) => {
-  // Create an RTCPeerConnection for the peer with userId
-  const PeerConnection = await createPeerConnection(peerUserId);
-  connectedPeers[peerUserId] = PeerConnection;
+  // in case of screen sharing
+  let PeerConnection;
+
+  if (peerUserId in connectedPeers) {
+    PeerConnection = connectedPeers[peerUserId];
+  } else {
+    // Create an RTCPeerConnection for the peer with userId
+    PeerConnection = await createPeerConnection(peerUserId);
+    connectedPeers[peerUserId] = PeerConnection;
+    // Increase user count for host user
+    count += 1;
+    userCount.innerText = count;
+  }
+
   // Create and send offer
   await PeerConnection.createOffer()
     .then((sessionDescription) => {
@@ -436,9 +573,20 @@ const sendOffer = async (peerUserId) => {
 
 // Answer an offer from a peer setting local description
 const sendAnswer = async (peerUserId, offer) => {
-  // Create an RTCPeerConnection for the peer
-  const peerConnection = await createPeerConnection(peerUserId);
-  connectedPeers[peerUserId] = peerConnection;
+  // In case screen sharing
+  let peerConnection;
+
+  if (peerUserId in connectedPeers) {
+    peerConnection = connectedPeers[peerUserId];
+  } else {
+    // Create an RTCPeerConnection for the peer
+    peerConnection = await createPeerConnection(peerUserId);
+    connectedPeers[peerUserId] = peerConnection;
+    // Increase user count for remote user
+    count += 1;
+    userCount.innerText = count;
+  }
+
   // Set remote description
   await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
   // Create and send answer
