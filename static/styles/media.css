@@ -150,6 +150,10 @@ video {
   cursor: pointer;
 }
 
+.control-btn.active-screen {
+  background-color: #ed2939;
+}
+
 #leave-btn {
   background-color: #ed2939;
   border-radius: 20%;
@@ -159,6 +163,24 @@ video {
   color: #960aee;
   border: none;
   background: transparent;
+}
+
+/* user count display */
+.user-count {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 100%;
+  background-color: #5c038c;
+  position: absolute;
+  right: -6px;
+  top: -6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  padding: 0.5rem;
+  padding-bottom: 0.7rem;
+  font-weight: bold;
 }
 
 /* aside */
@@ -438,7 +460,7 @@ aside {
 .media_containers.screen_active_media_containers {
   height: 30%;
   padding: 0;
-  gap: .5rem;
+  gap: 0.5rem;
   order: 2;
 }
 
@@ -452,8 +474,6 @@ aside {
   width: 100px;
   height: 100px;
 }
-
-
 
 /* Media queries */
 
@@ -541,13 +561,17 @@ aside {
     height: 30%;
   }
 
-  .media_containers.screen_active_media_containers .media_container + .media_container {
+  .media_containers.screen_active_media_containers
+    .media_container
+    + .media_container {
     margin-top: 1.5rem;
   }
 
-  .media_containers.screen_active_media_containers .media_container .media_alt p {
+  .media_containers.screen_active_media_containers
+    .media_container
+    .media_alt
+    p {
     width: 100px;
     height: 100px;
   }
-
 }
