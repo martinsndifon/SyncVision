@@ -12,6 +12,7 @@ const placeholderText = document.getElementById('placeholder-text');
 const infoSection = document.getElementById('info-section');
 const notice = document.getElementById('notice');
 const screenShare = document.getElementById('share_screen_btn');
+const userCount = document.getElementById('user-count');
 
 const socket = io({ autoConnect: false });
 const connectedPeers = {};
@@ -21,6 +22,8 @@ let screenStream;
 let screenTracks = [];
 // screen Media Stream Id
 let remoteScreenStreamId;
+// user count
+let count = 1;
 
 screenShare.addEventListener('click', async () => {
   if (screenSharing && screenSharing.peerId != userId) {
@@ -311,6 +314,9 @@ socket.on('message', async (message) => {
     }
     adjustContainers(mediaContainers, null, 'reAdjustContainer', screenSharing);
     delete connectedPeers[peerUserId];
+    // update count
+    count -= 1;
+    userCount.innerText = count;
 
     if (Object.keys(connectedPeers).length === 0) {
       infoSection.classList.remove('hide');
@@ -412,6 +418,7 @@ const startConnection = async () => {
         }
       });
       socket.emit('join', { room: roomId });
+      userCount.innerText = count;
     })
     .catch(async () => {
       flashMessage('Give permission to media devices', 'error');
@@ -549,6 +556,9 @@ const sendOffer = async (peerUserId) => {
     // Create an RTCPeerConnection for the peer with userId
     PeerConnection = await createPeerConnection(peerUserId);
     connectedPeers[peerUserId] = PeerConnection;
+    // Increase user count for host user
+    count += 1;
+    userCount.innerText = count;
   }
 
   // Create and send offer
@@ -572,6 +582,9 @@ const sendAnswer = async (peerUserId, offer) => {
     // Create an RTCPeerConnection for the peer
     peerConnection = await createPeerConnection(peerUserId);
     connectedPeers[peerUserId] = peerConnection;
+    // Increase user count for remote user
+    count += 1;
+    userCount.innerText = count;
   }
 
   // Set remote description
