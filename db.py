@@ -8,7 +8,7 @@ def get_cache():
     global cache
 
     if cache is None:
-        redis.from_url(os.environ.get("REDISCLOUD_URL"))
+        cache = redis.from_url(os.environ.get("REDISCLOUD_URL"))
 
     return cache
 # cache = redis.Redis()
