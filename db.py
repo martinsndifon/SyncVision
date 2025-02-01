@@ -2,7 +2,7 @@ import redis
 import os
 
 # for heroku deployment
-cache = redis.from_url(os.environ.get("REDIS_URL"))
+cache = redis.from_url(os.environ.get("REDISCLOUD_URL"))
 
 # cache = redis.Redis()
 

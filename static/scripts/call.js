@@ -485,26 +485,28 @@ const createPeerConnection = async (peerUserId) => {
   try {
     const pc = new RTCPeerConnection({
       iceServers: [
-        { urls: 'stun:stun.relay.metered.ca:80' },
         {
-          urls: 'turn:a.relay.metered.ca:80',
-          username: '79c61b5b13489486fdecdb80',
-          credential: 'BRFMDnKhz0H/fV6Z',
+          urls: "stun:stun.relay.metered.ca:80",
         },
         {
-          urls: 'turn:a.relay.metered.ca:80?transport=tcp',
-          username: '79c61b5b13489486fdecdb80',
-          credential: 'BRFMDnKhz0H/fV6Z',
+          urls: "turn:standard.relay.metered.ca:80",
+          username: "210be63621a37c411dd757ce",
+          credential: "bgq0yXhrFsApyv26",
         },
         {
-          urls: 'turn:a.relay.metered.ca:443',
-          username: '79c61b5b13489486fdecdb80',
-          credential: 'BRFMDnKhz0H/fV6Z',
+          urls: "turn:standard.relay.metered.ca:80?transport=tcp",
+          username: "210be63621a37c411dd757ce",
+          credential: "bgq0yXhrFsApyv26",
         },
         {
-          urls: 'turn:a.relay.metered.ca:443?transport=tcp',
-          username: '79c61b5b13489486fdecdb80',
-          credential: 'BRFMDnKhz0H/fV6Z',
+          urls: "turn:standard.relay.metered.ca:443",
+          username: "210be63621a37c411dd757ce",
+          credential: "bgq0yXhrFsApyv26",
+        },
+        {
+          urls: "turns:standard.relay.metered.ca:443?transport=tcp",
+          username: "210be63621a37c411dd757ce",
+          credential: "bgq0yXhrFsApyv26",
         },
       ],
     });

@@ -70,7 +70,7 @@ const copy = () => {
   textArea.select();
 
   navigator.clipboard.writeText(
-    `https://syncvision.live/call/${textArea.value}`
+    `https://syncvision.martinsndifon.com/call/${textArea.value}`
   );
   document.body.removeChild(textArea);
   flashMessage('Copied to clipboard');
