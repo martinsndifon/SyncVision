@@ -3,11 +3,18 @@
 from flask import Flask, session, request, render_template, redirect
 from views import app_views
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
-from db import cache, store_user_in_room, remove_room_expiration, remove_user_from_room, get_users_in_room
+from db import get_cache, store_user_in_room, remove_room_expiration, remove_user_from_room, get_users_in_room
 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '!syncvisionsecretkey!'
+
+try:
+    cache = get_cache()
+    print("Redis is connected:", cache.ping())  # Check if Redis responds
+except Exception as e:
+    print("Redis connection failed:", e)
+
 socketio = SocketIO(app)
 app.register_blueprint(app_views)
 
