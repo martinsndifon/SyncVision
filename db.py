@@ -1,4 +1,5 @@
 import redis, os, time
+from urllib.parse import urlparse
 
 # for heroku deployment
 cache = None
@@ -7,7 +8,18 @@ def get_cache():
     global cache
     if cache is None:
         retries = 5
-        print("url:", os.environ.get("REDISCLOUD_URL"))
+        redis_url = os.environ.get("REDISCLOUD_URL")
+        parsed_url = urlparse(redis_url)
+        REDIS_IP = "34.228.42.204"
+        REDIS_HOST = parsed_url.hostname
+        REDIS_PORT = parsed_url.port
+        REDIS_PASSWORD = parsed_url.password
+
+        # Print to verify (REMOVE before deploying for security)
+        print("Redis Host:", REDIS_HOST)
+        print("Redis Port:", REDIS_PORT)
+        print("Redis Password:", REDIS_PASSWORD)
+
         for i in range(retries):
             try:
                 cache = redis.from_url(os.environ.get("REDISCLOUD_URL"))
