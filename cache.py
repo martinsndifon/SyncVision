@@ -1,6 +1,7 @@
 import redis, os
 from urllib.parse import urlparse
 
+cache = None
 
 def get_cache():
     global cache
