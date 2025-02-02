@@ -1,15 +1,22 @@
-import redis
-import os
+import redis, os, time
 
 # for heroku deployment
 cache = None
 
 def get_cache():
     global cache
-
     if cache is None:
-        cache = redis.from_url(os.environ.get("REDISCLOUD_URL"))
-
+        retries = 5
+        for i in range(retries):
+            try:
+                cache = redis.from_url(os.environ.get("REDISCLOUD_URL"), ssl=True)
+                if cache.ping():
+                    print("Connected to Redis")
+                    return cache
+            except redis.ConnectionError:
+                print(f"Redis connection failed, retrying {i+1}/{retries}...")
+                time.sleep(3)  # Wait before retrying
+        raise Exception("Could not connect to Redis after multiple attempts")
     return cache
 # cache = redis.Redis()
 
