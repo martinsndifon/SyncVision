@@ -1,6 +1,6 @@
 from cache import get_cache
 cache = get_cache()
-# cache = redis.Redis()
+# cache = redis.Redis() # Use this in development
 
 
 def store_user_in_room(room_id, user_id):

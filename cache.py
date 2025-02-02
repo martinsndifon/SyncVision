@@ -8,15 +8,10 @@ def get_cache():
     if cache is None:
         redis_url = os.environ.get("REDISCLOUD_URL")
         parsed_url = urlparse(redis_url)
-        REDIS_IP = "34.228.42.204"
+        REDIS_IP = os.environ.get("REDIS_IP")
         REDIS_HOST = parsed_url.hostname
         REDIS_PORT = parsed_url.port
         REDIS_PASSWORD = parsed_url.password
-
-        # Print to verify (REMOVE before deploying for security)
-        print("Redis Host:", REDIS_HOST)
-        print("Redis Port:", REDIS_PORT)
-        print("Redis Password:", REDIS_PASSWORD)
 
         try:
             cache = redis.Redis(
@@ -25,9 +20,10 @@ def get_cache():
                 password=REDIS_PASSWORD,
             )
             if cache.ping():
-                print("Connected to Redis")
+                # print("Connected to Redis")
                 return cache
         except redis.ConnectionError as e:
-            print(f"Redis connection failed:", e)
+            # print(f"Redis connection failed:", e)
+            pass
 
     return cache

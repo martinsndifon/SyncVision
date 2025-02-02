@@ -12,9 +12,10 @@ app.config['SECRET_KEY'] = '!syncvisionsecretkey!'
 
 try:
     cache = get_cache()
-    print("Redis is connected:", cache.ping())  # Check if Redis responds
+    # print("Redis is connected:", cache.ping())
 except Exception as e:
-    print("Redis connection failed:", e)
+    # print("Redis connection failed:", e)
+    pass
 
 socketio = SocketIO(app)
 app.register_blueprint(app_views)
