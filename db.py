@@ -7,9 +7,10 @@ def get_cache():
     global cache
     if cache is None:
         retries = 5
+        print("url:", os.environ.get("REDISCLOUD_URL"))
         for i in range(retries):
             try:
-                cache = redis.from_url(os.environ.get("REDISCLOUD_URL"), ssl=True)
+                cache = redis.from_url(os.environ.get("REDISCLOUD_URL"))
                 if cache.ping():
                     print("Connected to Redis")
                     return cache
