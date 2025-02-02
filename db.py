@@ -22,12 +22,16 @@ def get_cache():
 
         for i in range(retries):
             try:
-                cache = redis.from_url(os.environ.get("REDISCLOUD_URL"))
+                cache = redis.Redis(
+                    host=REDIS_IP,
+                    port=REDIS_PORT,
+                    password=REDIS_PASSWORD,
+                )
                 if cache.ping():
                     print("Connected to Redis")
                     return cache
-            except redis.ConnectionError:
-                print(f"Redis connection failed, retrying {i+1}/{retries}...")
+            except redis.ConnectionError as e:
+                print(f"Redis connection failed, retrying {i+1}/{retries}...", e)
                 time.sleep(3)  # Wait before retrying
         raise Exception("Could not connect to Redis after multiple attempts")
     return cache
