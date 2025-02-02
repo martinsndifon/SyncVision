@@ -1,13 +1,9 @@
 import redis, os, time
 from urllib.parse import urlparse
 
-# for heroku deployment
-cache = None
-
 def get_cache():
     global cache
     if cache is None:
-        retries = 5
         redis_url = os.environ.get("REDISCLOUD_URL")
         parsed_url = urlparse(redis_url)
         REDIS_IP = "34.228.42.204"
@@ -20,20 +16,18 @@ def get_cache():
         print("Redis Port:", REDIS_PORT)
         print("Redis Password:", REDIS_PASSWORD)
 
-        for i in range(retries):
-            try:
-                cache = redis.Redis(
-                    host=REDIS_IP,
-                    port=REDIS_PORT,
-                    password=REDIS_PASSWORD,
-                )
-                if cache.ping():
-                    print("Connected to Redis")
-                    return cache
-            except redis.ConnectionError as e:
-                print(f"Redis connection failed, retrying {i+1}/{retries}...", e)
-                time.sleep(3)  # Wait before retrying
-        raise Exception("Could not connect to Redis after multiple attempts")
+        try:
+            cache = redis.Redis(
+                host=REDIS_IP,
+                port=REDIS_PORT,
+                password=REDIS_PASSWORD,
+            )
+            if cache.ping():
+                print("Connected to Redis")
+                return cache
+        except redis.ConnectionError as e:
+            print(f"Redis connection failed:", e)
+
     return cache
 # cache = redis.Redis()
 
