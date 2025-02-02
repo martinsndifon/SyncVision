@@ -3,7 +3,8 @@
 from flask import Flask, session, request, render_template, redirect
 from views import app_views
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
-from db import get_cache, store_user_in_room, remove_room_expiration, remove_user_from_room, get_users_in_room
+from db import store_user_in_room, remove_room_expiration, remove_user_from_room, get_users_in_room
+from cache import get_cache
 
 
 app = Flask(__name__)

@@ -3,7 +3,10 @@
 from flask import render_template, redirect, url_for, session, request
 from views import app_views
 from uuid import uuid4
-from db import cache, get_users_in_room
+from db import get_users_in_room
+from cache import get_cache
+
+cache = get_cache()
 
 
 def check_room_existence(roomId):
